@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1011431188299",
+    "project_id": "smartleader-d0ba2",
+    "storage_bucket": "smartleader-d0ba2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1011431188299:android:c4ad6d0c738848efa26ace",
+        "android_client_info": {
+          "package_name": "com.example.smart_leader"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxj5S93bpmbDOeDlIueVbjJlrdH_GGaJU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
