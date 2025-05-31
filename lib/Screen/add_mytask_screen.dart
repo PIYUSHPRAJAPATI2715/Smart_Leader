@@ -364,12 +364,24 @@ class _AddMyTaskScreenState extends State<AddMyTaskScreen> {
                 builder: (BuildContext context) {
                   return ShortDialogWidget(
                     isFrequencyVisible: true,
+
+                    // Descending Date Sort (Newest first)
                     onDSCDateTap: () {
                       Navigator.pop(context);
                       setState(() {
                         showTaskList.sort((a, b) => b.old_date!.compareTo(a.old_date!));
                       });
                     },
+
+                    // Ascending Date Sort (Oldest first)
+                    dateOntap: () {
+                      Navigator.pop(context);
+                      setState(() {
+                        showTaskList.sort((a, b) => a.old_date!.compareTo(b.old_date!));
+                      });
+                    },
+
+                    // Frequency Sort: Daily > Weekly > Monthly
                     onFrequencyTap: () {
                       Navigator.pop(context);
                       setState(() {
@@ -387,28 +399,24 @@ class _AddMyTaskScreenState extends State<AddMyTaskScreen> {
                       });
                     },
 
-
-
+                    // Z to A
                     onZtoATap: () {
-
+                      Navigator.pop(context);
                       setState(() {
                         showTaskList.sort((a, b) => b.summary!.compareTo(a.summary!));
                       });
-                      Navigator.pop(context);
                     },
+
+                    // A to Z
                     alphaOntap: () {
+                      Navigator.pop(context);
                       setState(() {
                         showTaskList.sort((a, b) => a.summary!.compareTo(b.summary!));
                       });
                       Navigator.pop(context);
                     },
-                    dateOntap: () {
-                      setState(() {
-                        showTaskList.sort((a, b) => a.old_date!.compareTo(b.old_date!));
-                      });
-                      Navigator.pop(context);
-                    },
                   );
+
                 },
               );
             },
