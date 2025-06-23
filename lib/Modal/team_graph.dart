@@ -62,8 +62,8 @@ class TeamData {
   String? userId;
   String? teamId;
   String? teamName;
-  String? targetAmount;
-  String? amount;
+  dynamic targetAmount;
+  dynamic amount;
   String? monthYear;
   String? path;
 

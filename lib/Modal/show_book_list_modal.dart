@@ -1,32 +1,32 @@
 class ShowBookListModal {
-  List<ShowBookListModalData>? data;
+  List<Data>? data;
   String? message;
 
   ShowBookListModal({this.data, this.message});
 
   ShowBookListModal.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
-      data = <ShowBookListModalData>[];
+      data = <Data>[];
       json['data'].forEach((v) {
-        data!.add(new ShowBookListModalData.fromJson(v));
+        data!.add(new Data.fromJson(v));
       });
     }
     message = json['message'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
+    final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
-    data['message'] = message;
+    data['message'] = this.message;
     return data;
   }
 }
 
-class ShowBookListModalData {
+class Data {
   String? id;
-  String? tagId;
+  String? languageKey;
   String? bookName;
   String? writerName;
   String? description;
@@ -37,15 +37,13 @@ class ShowBookListModalData {
   String? flipkartLink;
   String? flipkartPrice;
   String? bookAudio;
-  String? file;
   String? eBookPrice;
-  String? audioFile;
   String? audioPrice;
   String? path;
 
-  ShowBookListModalData(
+  Data(
       {this.id,
-        this.tagId,
+        this.languageKey,
         this.bookName,
         this.writerName,
         this.description,
@@ -56,15 +54,13 @@ class ShowBookListModalData {
         this.flipkartLink,
         this.flipkartPrice,
         this.bookAudio,
-        this.file,
         this.eBookPrice,
-        this.audioFile,
         this.audioPrice,
         this.path});
 
-  ShowBookListModalData.fromJson(Map<String, dynamic> json) {
+  Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    tagId = json['tag_id'];
+    languageKey = json['language_key'];
     bookName = json['book_name'];
     writerName = json['writer_name'];
     description = json['description'];
@@ -75,34 +71,28 @@ class ShowBookListModalData {
     flipkartLink = json['flipkart_link'];
     flipkartPrice = json['flipkart_price'];
     bookAudio = json['book_audio'];
-    file = json['file'];
     eBookPrice = json['e_book_price'];
-    audioFile = json['audio_file'];
     audioPrice = json['audio_price'];
-
     path = json['path'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['tag_id'] = tagId;
-    data['book_name'] = bookName;
-    data['writer_name'] = writerName;
-    data['description'] = description;
-    data['image'] = image;
-    data['book_price'] = bookPrice;
-    data['amazon_link'] = amazonLink;
-    data['amazon_price'] = amazonPrice;
-    data['flipkart_link'] = flipkartLink;
-    data['flipkart_price'] = flipkartPrice;
-    data['book_audio'] = bookAudio;
-    data['file'] = file;
-    data['e_book_price'] = eBookPrice;
-    data['audio_file'] = audioFile;
-    data['audio_price'] = audioPrice;
-
-    data['path'] = path;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['language_key'] = this.languageKey;
+    data['book_name'] = this.bookName;
+    data['writer_name'] = this.writerName;
+    data['description'] = this.description;
+    data['image'] = this.image;
+    data['book_price'] = this.bookPrice;
+    data['amazon_link'] = this.amazonLink;
+    data['amazon_price'] = this.amazonPrice;
+    data['flipkart_link'] = this.flipkartLink;
+    data['flipkart_price'] = this.flipkartPrice;
+    data['book_audio'] = this.bookAudio;
+    data['e_book_price'] = this.eBookPrice;
+    data['audio_price'] = this.audioPrice;
+    data['path'] = this.path;
     return data;
   }
 }

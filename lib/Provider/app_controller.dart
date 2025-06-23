@@ -153,7 +153,15 @@ class AppController with ChangeNotifier {
             monthCompleted = 0;
 
             for (var graph in team.teamData!) {
-              double target = double.parse(graph.targetAmount!);
+              double target = 0.0;
+              if (graph.targetAmount != null && double.tryParse(graph.targetAmount!) != null) {
+                target = double.parse(graph.targetAmount!);
+              } else {
+                // handle invalid or null value
+                print("Invalid targetAmount: ${graph.targetAmount}");
+                // maybe assign a default or show an error message
+              }
+
               double completed = double.parse(graph.amount!);
 
               if (!monthList.contains(graph.monthYear!)) {

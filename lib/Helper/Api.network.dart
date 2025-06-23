@@ -94,6 +94,7 @@ class ApiNetwork {
   static const String showMyJoinedTeam = "$baseUrl?action=show_sub_team_member";
 
   static const String searchBook = "$baseUrl?action=search_book";
+  static const String searchVideo = "$baseUrl?action=video_search";
 
   static const String bookTags = "$baseUrl?action=show_tags";
 

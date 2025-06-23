@@ -21,6 +21,8 @@ import 'package:smart_leader/Widget/custom_top_container.dart';
 import 'package:smart_leader/Widget/edit_creat_connection_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../ExtractClasses/short_dialog_widget.dart';
+
 class CreatConnectionScreen extends StatefulWidget {
   final ShowConnectionFolderModalData showConnectionFolderModalData;
 
@@ -39,10 +41,12 @@ class _CreatConnectionScreenState extends State<CreatConnectionScreen> {
   bool isNetwork = false;
 
   bool isConnection = false;
-
+  List<NewEventData> _originalConnectionList = [];
+  List<NewEventData> _filterConnectionList = [];
+  String _lastSearchValue = '';
   // List<ShowConnectionModalData> _showConnectionList = [];
   List<NewEventData> _showConnectionList = [];
-  List<NewEventData> _filterConnectionList = [];
+  // List<NewEventData> _filterConnectionList = [];
 
   @override
   void initState() {
@@ -50,6 +54,64 @@ class _CreatConnectionScreenState extends State<CreatConnectionScreen> {
     super.initState();
     // checkNetwork();
     getNewEvent();
+  }
+  String _currentSortType = '';
+
+  void _applySearchAndSort({String? sortType}) {
+    setState(() {
+      _currentSortType = sortType ?? _currentSortType;
+
+      // Step 1: Start from the original list
+      List<NewEventData> tempList = List.from(_originalConnectionList);
+
+      // Step 2: Apply search
+      if (_lastSearchValue.isNotEmpty) {
+        final searchLower = _lastSearchValue.toLowerCase();
+        tempList = tempList.where((element) {
+          final name = element.name?.toLowerCase().contains(searchLower) ?? false;
+          final phone = element.mobile?.toLowerCase().contains(searchLower) ?? false;
+          final occupation = element.occupation?.toLowerCase().contains(searchLower) ?? false;
+          return name || phone || occupation;
+        }).toList();
+      }
+
+      // Step 3: Apply sort
+      switch (_currentSortType) {
+        case 'a_to_z':
+          tempList.sort((a, b) => (a.name ?? '').compareTo(b.name ?? ''));
+          break;
+        case 'z_to_a':
+          tempList.sort((a, b) => (b.name ?? '').compareTo(a.name ?? ''));
+          break;
+        case 'date_asc':
+          tempList.sort((a, b) {
+            final DateTime aDate = (a.date is DateTime ? a.date as DateTime : DateTime(1970));
+            final DateTime bDate = (b.date is DateTime ? b.date as DateTime : DateTime(1970));
+            return aDate.compareTo(bDate);
+          });
+          break;
+
+        case 'date_desc':
+          tempList.sort((a, b) {
+            final DateTime aDate = (a.date is DateTime ? a.date as DateTime : DateTime(1970));
+            final DateTime bDate = (b.date is DateTime ? b.date as DateTime : DateTime(1970));
+            return bDate.compareTo(aDate);
+          });
+          break;
+
+        case 'frequency':
+          final orderMap = {'daily': 1, 'weekly': 2, 'monthly': 3};
+          tempList.sort((a, b) {
+            final aOrder = orderMap[a.time?.toLowerCase()] ?? 99;
+            final bOrder = orderMap[b.time?.toLowerCase()] ?? 99;
+            return aOrder.compareTo(bOrder);
+          });
+          break;
+      }
+
+      // Step 4: Update the list shown
+      _filterConnectionList = tempList;
+    });
   }
 
   /*
@@ -180,21 +242,53 @@ class _CreatConnectionScreenState extends State<CreatConnectionScreen> {
           SizedBox(height: 10.0),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: CupertinoSearchTextField(
-              backgroundColor: Colors.grey.shade50,
-              onChanged: (value) {
-                setState(() {
-                  _filterConnectionList = _showConnectionList.where((element) {
-                    final name = element.name!.toLowerCase().contains(value);
-                    final phone = element.mobile!.toLowerCase().contains(value);
-                    final occupation =
-                        element.occupation!.toLowerCase().contains(value);
-                    return name || phone || occupation;
-                  }).toList();
-                });
-              },
+            child: Row(
+              children: [
+                Expanded(
+                  child: CupertinoSearchTextField(
+                    backgroundColor: Colors.grey.shade50,
+                    onChanged: (value) {
+                      _lastSearchValue = value;
+                      _applySearchAndSort();
+                    },
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.filter_list),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return ShortDialogWidget(
+                          onDSCDateTap: () {
+                            Navigator.pop(context);
+                            _applySearchAndSort(sortType: 'date_desc');
+                          },
+                          dateOntap: () {
+                            Navigator.pop(context);
+                            _applySearchAndSort(sortType: 'date_asc');
+                          },
+                          onZtoATap: () {
+                            Navigator.pop(context);
+                            _applySearchAndSort(sortType: 'z_to_a');
+                          },
+                          alphaOntap: () {
+                            Navigator.pop(context);
+                            _applySearchAndSort(sortType: 'a_to_z');
+                          },
+                          onFrequencyTap: () {
+                            Navigator.pop(context);
+                            _applySearchAndSort(sortType: 'frequency');
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
             ),
           ),
+
           Expanded(
             child: SingleChildScrollView(
               child: isConnection
@@ -981,3 +1075,4 @@ class _CreatConnectionScreenState extends State<CreatConnectionScreen> {
 //                         );
 //                       },
 //                     ),
+

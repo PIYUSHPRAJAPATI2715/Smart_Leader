@@ -28,7 +28,8 @@ class AddMyNoteWidget extends StatefulWidget {
 
 class _AddMyNoteWidgetState extends State<AddMyNoteWidget> {
   final TextEditingController titleController = TextEditingController();
-  final HtmlEditorController htmlController = HtmlEditorController();
+  final TextEditingController noteController = TextEditingController();
+  // final HtmlEditorController htmlController = HtmlEditorController();
 
   String hintTitle = 'Title';
   String hintDesc = 'Description';
@@ -56,11 +57,11 @@ class _AddMyNoteWidgetState extends State<AddMyNoteWidget> {
       return;
     }
 
-    String htmlDesc = await htmlController.getText();
-    if (htmlDesc.trim().isEmpty || htmlDesc == "<p><br></p>") {
-      Helper.toastMassage('Please Enter Description', Colors.red);
-      return;
-    }
+    // String htmlDesc = await htmlController.getText();
+    // if (htmlDesc.trim().isEmpty || htmlDesc == "<p><br></p>") {
+    //   Helper.toastMassage('Please Enter Description', Colors.red);
+    //   return;
+    // }
 
     bool isNetwork = await Helper.isNetworkAvailable();
 
@@ -68,24 +69,25 @@ class _AddMyNoteWidgetState extends State<AddMyNoteWidget> {
       Map<String, String> body = {
         "folder_id": widget.id,
         'title': titleController.text,
-        "description": htmlDesc,
+        "description": noteController.text, // Send raw HTML string directly
         "user_id": SessionManager.getUserID(),
       };
 
-      ApiHelper.addNote(body).then((login) {
+      ApiHelper.addNote(body).then((response) {
         setState(() => isSubmit = false);
 
-        if (login.message == 'Note Add Successfully ') {
-          addNoteOffline(htmlDesc);
+        if (response.message == 'Note Add Successfully ') {
+          addNoteOffline(noteController.text); // save offline if needed
         } else {
           Helper.toastMassage('Note Add Successfully', Colors.green);
           Navigator.pop(context, true);
         }
       });
     } else {
-      addNoteOffline(htmlDesc);
+      addNoteOffline(noteController.text);
     }
   }
+
 
   void addNoteOffline(String htmlDesc) async {
     AddNote addNote = AddNote(
@@ -145,34 +147,18 @@ class _AddMyNoteWidgetState extends State<AddMyNoteWidget> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    Container(
-                      height: 300,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: kblueColor),
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      child: HtmlEditor(
-                        controller: htmlController,
-                        htmlEditorOptions: HtmlEditorOptions(
-                          hint: "Your note here...",
-                          shouldEnsureVisible: true,
-                        ),
-                        htmlToolbarOptions: HtmlToolbarOptions(
-                          toolbarPosition: ToolbarPosition.aboveEditor,
-                          defaultToolbarButtons: [
-                             FontButtons(),
-                            // ColorButtons(),
-                            // ListButtons(),
-
-                            // ParagraphButtons(),
-                            InsertButtons(),
-                            // OtherButtons(codeview: false),
-                          ],
-                        ),
-                        otherOptions: OtherOptions(
-                          height: 300,
-                        ),
-                      ),
+                    CustomTextField(
+                      hight: 100,
+                      title: "Your note here",
+                      controller: noteController,
+                      hint: hintTitle,
+                      inputAction: TextInputAction.none,
+                      inputType: TextInputType.text,
+                      lableName: hintTitle,
+maxLines: 8,
+                      minLines: 1,
+                      hintfont: 15,
+                      lablefont: 14,
                     ),
                     const SizedBox(height: 10.0),
                   ],

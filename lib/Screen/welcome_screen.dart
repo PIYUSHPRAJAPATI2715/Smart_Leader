@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -271,10 +272,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 label: "Phone Number",
                 hintText: "Enter your phone number",
                 keyboardType: TextInputType.phone,
-                prefixIcon: Icons.email,
+                prefixIcon: Icons.phone, // better icon for phone
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(10),
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Phone number is required";
+                  } else if (value.length != 10) {
+                    return "Phone number must be 10 digits";
                   }
                   return null;
                 },
@@ -358,76 +365,76 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               SizedBox(
                 height: 10,
               ),
-              customtext(
-                  color: SessionManager.getTheme() == true
-                      ? kWhiteColor
-                      : Color(0xff2036B4),
-                  fontWeight: FontWeight.w400,
-                  text: "Signup",
-                  fontsize: 30),
-              SizedBox(
-                height: 10,
-              ),
-              customtext(
-                fontWeight: FontWeight.w300,
-                text: "With",
-                fontsize: 18,
-                color: Theme.of(context).primaryColor,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              isSubmit == true
-                  ? Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            googleLogin();
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: SessionManager.getTheme() == true
-                                      ? kWhiteColor
-                                      : Color(0xff156064),
-                                  width: 2),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Center(
-                              child: Image.asset("assest/png_icon/googleicon.png"),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 40,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            signInWithFacebook();
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: SessionManager.getTheme() == true
-                                      ? kWhiteColor
-                                      : Color(0xff156064),
-                                  width: 2),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Center(
-                              child:
-                                  Image.asset("assest/png_icon/facebookicon.png"),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
+              // customtext(
+              //     color: SessionManager.getTheme() == true
+              //         ? kWhiteColor
+              //         : Color(0xff2036B4),
+              //     fontWeight: FontWeight.w400,
+              //     text: "Signup",
+              //     fontsize: 30),
+              // SizedBox(
+              //   height: 10,
+              // ),
+              // customtext(
+              //   fontWeight: FontWeight.w300,
+              //   text: "With",
+              //   fontsize: 18,
+              //   color: Theme.of(context).primaryColor,
+              // ),
+              // SizedBox(
+              //   height: 10,
+              // ),
+              // isSubmit == true
+              //     ? Center(
+              //         child: CircularProgressIndicator(),
+              //       )
+              //     : Row(
+              //         mainAxisSize: MainAxisSize.min,
+              //         children: [
+              //           InkWell(
+              //             onTap: () {
+              //               googleLogin();
+              //             },
+              //             child: Container(
+              //               padding: EdgeInsets.all(12),
+              //               decoration: BoxDecoration(
+              //                 border: Border.all(
+              //                     color: SessionManager.getTheme() == true
+              //                         ? kWhiteColor
+              //                         : Color(0xff156064),
+              //                     width: 2),
+              //                 borderRadius: BorderRadius.circular(20),
+              //               ),
+              //               child: Center(
+              //                 child: Image.asset("assest/png_icon/googleicon.png"),
+              //               ),
+              //             ),
+              //           ),
+              //           SizedBox(
+              //             width: 40,
+              //           ),
+              //           InkWell(
+              //             onTap: () {
+              //               signInWithFacebook();
+              //             },
+              //             child: Container(
+              //               padding: EdgeInsets.all(12),
+              //               decoration: BoxDecoration(
+              //                 border: Border.all(
+              //                     color: SessionManager.getTheme() == true
+              //                         ? kWhiteColor
+              //                         : Color(0xff156064),
+              //                     width: 2),
+              //                 borderRadius: BorderRadius.circular(20),
+              //               ),
+              //               child: Center(
+              //                 child:
+              //                     Image.asset("assest/png_icon/facebookicon.png"),
+              //               ),
+              //             ),
+              //           )
+              //         ],
+              //       ),
               SizedBox(
                 height: 35,
               ),
@@ -442,7 +449,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget topContainer() {
     return Container(
       width: double.infinity,
-      height: 80,
+      height: 150,
       decoration: const BoxDecoration(
           image: DecorationImage(
               image: AssetImage("assest/images/OnBordScreenTopScreen.png"),
@@ -453,7 +460,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget bottumContainer() {
     return Container(
       width: double.infinity,
-      height: 100,
+      height: 150,
       decoration: const BoxDecoration(
           image: DecorationImage(
               image: AssetImage("assest/images/OnBordScreenBottumImage.png"),

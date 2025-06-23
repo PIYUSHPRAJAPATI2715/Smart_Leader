@@ -35,39 +35,44 @@ class _EbookScreenState extends State<EbookScreen> {
     return Scaffold(
       body: Column(
         children: [
-          TopContainer(title: "Books",onTap: (){
-            Navigator.pop(context);
-          }),
-          FutureBuilder<ShowBookListModal>(
-            future: ebooks,
-              builder: (context,snapshot){
-                if(snapshot.connectionState==ConnectionState.waiting){
-                  return Center(child: CircularProgressIndicator(),);
+          TopContainer(
+            title: "Books",
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          Expanded(
+            child: FutureBuilder<ShowBookListModal>(
+              future: ebooks,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
                 }
-            return Expanded(
-              child: ListView.builder(
-                  shrinkWrap: true,
+
+                if (!snapshot.hasData || snapshot.data!.data == null || snapshot.data!.data!.isEmpty) {
+                  return Center(child: Text("No books available"));
+                }
+
+                return ListView.builder(
                   itemCount: snapshot.data!.data!.length,
-                  scrollDirection: Axis.vertical,
-                  physics: BouncingScrollPhysics(),
-               itemBuilder: (BuildContext, index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: EbooksWidget(
-                    showBookListModalData: snapshot.data!.data![index],
-                  ),
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: EbooksWidget(
+                        showBookListModalData: snapshot.data!.data![index],
+                      ),
+                    );
+                  },
                 );
-              }),
-            );
-          })
-
-
+              },
+            ),
+          )
 
         ],
-
       ),
     );
   }
+
 }
 /*
 GridView.builder(

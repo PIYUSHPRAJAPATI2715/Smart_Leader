@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,6 +19,7 @@ import 'package:http/http.dart' as http;
 
 import '../Widget/common_text_field.dart';
 import '../repo/signup_repo.dart';
+import 'forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -34,6 +36,18 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
 
   // bool isSubmit = false;
+  Future<void> _getToken() async {
+    try {
+      NotificationSettings settings = await FirebaseMessaging.instance.requestPermission();
+      print("Permission: ${settings.authorizationStatus}");
+
+      String? token = await FirebaseMessaging.instance.getToken();
+      print("FCM Token: $token");
+    } catch (e) {
+      print("Error getting token: $e");
+    }
+  }
+
   final _formKey = GlobalKey<FormState>();
   final SignupRepository signupRepository = SignupRepository();
   Future<void> submit() async {
@@ -44,40 +58,56 @@ class _LoginScreenState extends State<LoginScreen> {
       "password": passwordController.text.trim(),
     };
 
-    print("Sending data to API: $bodyData");
+    print("📤 Sending data to API: $bodyData");
 
-    final response = await http.post(
-      Uri.parse("https://ruparnatechnology.com/Smartleader/Api/process.php?action=user_login"),
-      body: bodyData,
-    );
+    try {
+      final response = await http.post(
+        Uri.parse("https://ruparnatechnology.com/Smartleader/Api/process.php?action=user_login"),
+        body: bodyData,
+      );
 
-    setState(() => isSubmit = false);
+      setState(() => isSubmit = false);
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      print("📥 Raw API Response: ${response.body}");
 
-      if (data['result'] != null && data['result'] == "Login Successful") {
-        final user = data['user'];
+      if (response.statusCode == 200) {
+        try {
+          final data = jsonDecode(response.body);
+          print("✅ Decoded JSON: $data");
 
-        // Save session data
-        SessionManager.setUserLoggedIn(true);
-        SessionManager.setUserID(user['id']);
-        SessionManager.setFirstName(user['username']);
+          if (data['result'] != null && data['result'] == "Login Successful") {
+            final user = data['user'];
 
-        Fluttertoast.showToast(msg: "Login Successful");
-        Helper.showSnackVar('Successfully Login', Colors.green, context);
+            // Save session data
+            SessionManager.setUserLoggedIn(true);
+            SessionManager.setUserID(user['id']);
+            SessionManager.setFirstName(user['username']);
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => BottumNavBar()),
-        );
-      } else if (data['error'] != null) {
-        Fluttertoast.showToast(msg: data['error']);
+            Fluttertoast.showToast(msg: "Login Successful");
+            Helper.showSnackVar('Successfully Login', Colors.green, context);
+
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => BottumNavBar()),
+            );
+          } else if (data['error'] != null) {
+            Fluttertoast.showToast(msg: data['error']);
+          } else {
+            Fluttertoast.showToast(msg: data);
+            print("⚠️ Unexpected data format: $data");
+          }
+        } catch (e) {
+          print("❌ JSON decode error: $e");
+          Fluttertoast.showToast(msg: "Invalid JSON response");
+        }
       } else {
-        Fluttertoast.showToast(msg: "Unexpected response from server");
+        print("❌ API call failed with status code: ${response.statusCode}");
+        Fluttertoast.showToast(msg: "Failed to connect to server");
       }
-    } else {
-      Fluttertoast.showToast(msg: "Failed to connect to server");
+    } catch (e) {
+      setState(() => isSubmit = false);
+      print("❌ Exception during API call: $e");
+      Fluttertoast.showToast(msg: "Something went wrong");
     }
   }
 
@@ -135,6 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: isSubmit ? null : () {
                     // Validate fields manually before submitting
 
+                    // _getToken();
                     if (emailController.text.trim().isEmpty) {
                       Fluttertoast.showToast(msg: "Email is required");
                       return;
@@ -196,6 +227,37 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
             SizedBox(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                customtext(
+                  fontWeight: FontWeight.w300,
+                  text: "If your are forgot password ? ",
+                  fontsize: 18,
+                  color: Theme.of(context).primaryColor,
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ForgotPassScreen()),
+                    );
+
+                  },
+                  child: customtext(
+                      color: SessionManager.getTheme() == true
+                          ? kWhiteColor
+                          : Color(0xff2036B4),
+                      fontWeight: FontWeight.w400,
+                      text: "Click here",
+
+                      fontsize: 22),
+                ),
+              ],
+            ),
+            SizedBox(
               height: 30,
             ),
 
@@ -212,7 +274,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget topContainer() {
     return Container(
       width: double.infinity,
-      height: 200,
+      height: 100,
       decoration: const BoxDecoration(
           image: DecorationImage(
               image: AssetImage("assest/images/OnBordScreenTopScreen.png"),
@@ -223,7 +285,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget bottumContainer() {
     return Container(
       width: double.infinity,
-      height: 218,
+      height: 100,
       decoration: const BoxDecoration(
           image: DecorationImage(
               image: AssetImage("assest/images/OnBordScreenBottumImage.png"),

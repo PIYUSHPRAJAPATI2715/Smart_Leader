@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_leader/Componants/session_manager.dart';
+import 'package:smart_leader/ExtractClasses/bottom_sheet_screen.dart';
 import 'package:smart_leader/LocalDatabase/Db/dp_helper.dart';
 import 'package:smart_leader/Provider/app_controller.dart';
 import 'package:smart_leader/Provider/expense_controller.dart';
@@ -17,6 +18,8 @@ import 'package:smart_leader/services/notification_service.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
+
+import 'ar_vr.dart';
 FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
 
 void main() async {
@@ -91,23 +94,21 @@ class _MaterialAppWidgetState extends State<MaterialAppWidget> {
   }
 
   Widget getPage() {
+    // If the welcome screen hasn't been shown yet, show onboarding first.
     if (!SessionManager.getwelcome()) {
       return const OnboardScreen1();
     }
 
+    // If the user is not logged in, show the welcome screen.
     if (!SessionManager.getisLoggedIn()) {
       return const WelcomeScreen();
     }
 
-    // Uncomment this if you need to handle profile completion
-    // if (!SessionManager.isProfileComplete()) {
-    //   return const ProfileDetailsScreen();
-    // }
-
+    // If the user is logged in, go to the bottom navigation screen.
     return BottumNavBar();
-  }
-}
- 
+  }}
+
+
 
 /*
   flutter_quill: used in

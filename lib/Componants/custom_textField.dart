@@ -18,6 +18,8 @@ class CustomTextField extends StatelessWidget {
   double lablefont;
   double hintfont;
   double gapHight;
+  final int? maxLines;
+  final int? minLines;
   bool enable;
   final int numberformate;
 
@@ -25,6 +27,7 @@ class CustomTextField extends StatelessWidget {
       {Key? key,
       this.gapHight = 8,
       required this.hight,
+
       required this.title,
       required this.controller,
       required this.hint,
@@ -34,6 +37,8 @@ class CustomTextField extends StatelessWidget {
       required this.hintfont,
       required this.lablefont,
       this.enable = true,
+        this.maxLines,
+        this.minLines,
       this.numberformate = 200})
       : super(key: key);
 
@@ -56,12 +61,15 @@ class CustomTextField extends StatelessWidget {
         Container(
           height: hight,
           decoration: BoxDecoration(
+
               borderRadius: BorderRadius.circular(15),
               border: Border.all(color: KBoxNewColor, width: 1.3),
               color: SessionManager.getTheme() == true
                   ? kscafolledColor
                   : kWhiteColor),
           child: TextFormField(
+            maxLines: maxLines,
+            minLines: minLines,
             enabled: enable,
             controller: controller,
             inputFormatters: [

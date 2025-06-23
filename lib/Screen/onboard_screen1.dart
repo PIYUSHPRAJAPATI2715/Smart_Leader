@@ -21,130 +21,125 @@ class _OnboardScreen1State extends State<OnboardScreen1> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       body: Column(
         children: [
-          Expanded(
-            child: topContainer(),
-          ),
-          SizedBox(
-            height: 10,
-          ),
+          topContainer(),
           middleColum(),
-          SizedBox(
-            height: 10,
-          ),
-          Expanded(
-            child: bottumContainer(),
-          )
+          bottumContainer(),
         ],
       ),
     );
   }
 
-
+  // Middle Column with PageView
   Widget middleColum() {
-
     final data = Provider.of<AppController>(context);
-    return Expanded(
+    return Flexible(
       flex: 2,
       child: PageView.builder(
         controller: pageController,
-          itemCount: OnBordModal.onBordList.length,
-          onPageChanged: (value) {
-            data.getPageIndex(value);
-          },
-          itemBuilder: (BuildContext Context, index) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Row(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: IconButton(onPressed: (){
+        itemCount: OnBordModal.onBordList.length,
+        onPageChanged: (value) {
+          data.getPageIndex(value);
+        },
+        itemBuilder: (BuildContext context, index) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: IconButton(
+                        onPressed: () {
                           pageController.animateToPage(
-                              pageController.page!.toInt() - 1,
-                              duration: Duration(microseconds: 300),
-                              curve: Curves.bounceIn);
-                        }, icon:Icon(Icons.arrow_back_ios,size:25,color: Theme.of(context).primaryColor,)),
+                            pageController.page!.toInt() - 1,
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.bounceIn,
+                          );
+                        },
+                        icon: Icon(Icons.arrow_back_ios, size: 25, color: Theme.of(context).primaryColor),
                       ),
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
-                         decoration: BoxDecoration(
-                           shape: BoxShape.circle,
-                           color: Theme.of(context).primaryColorDark
-                         ),
-                          child: Image(
-                            image: AssetImage(OnBordModal.onBordList[index].image),
-                            height: 250,
-                          ),
-                        ),
-                      ),
-                      Container(
+                    ),
+                    Expanded(
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
+                          shape: BoxShape.circle,
+                          color: Theme.of(context).primaryColorDark,
                         ),
-                        child: IconButton(onPressed: (){
-                          print(pageController.page);
-                          if(data.getPage==OnBordModal.onBordList.length-1){
+                        child: Image.asset(
+                          OnBordModal.onBordList[index].image,
+                          height: 250,
+                          width: 250,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: IconButton(
+                        onPressed: () {
+                          if (data.getPage == OnBordModal.onBordList.length - 1) {
                             data.getPageIndex(0);
                             SessionManager.setwelcome(true);
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (builder)=>WelcomeScreen()));
-                            // Navigator.push(context, MaterialPageRoute(builder: (context)=>WelcomeScreen()));
-
-                          }else{
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => WelcomeScreen()));
+                          } else {
                             pageController.animateToPage(
-                                pageController.page!.toInt() + 1,
-                                duration: Duration(microseconds: 300),
-                                curve: Curves.bounceIn);
+                              pageController.page!.toInt() + 1,
+                              duration: Duration(milliseconds: 300),
+                              curve: Curves.bounceIn,
+                            );
                           }
-                        }, icon:Icon(Icons.arrow_forward_ios_outlined,size:25,color: Theme.of(context).primaryColor,)),
+                        },
+                        icon: Icon(Icons.arrow_forward_ios_outlined, size: 25, color: Theme.of(context).primaryColor),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: 10,
-                ),
-                customtext(
-                    alignment: TextAlign.start,
-                    fontWeight: FontWeight.w700,
-                    color: Theme.of(context).primaryColor,
-                    text: OnBordModal.onBordList[index].title,
-                    fontsize: 25),
-                SizedBox(
-                  height: 15,
-                ),
-                customtext(
-                  fontWeight: FontWeight.w400,
-                  text: OnBordModal.onBordList[index].subTitle,
-                  fontsize: 15,
-                  color: Theme.of(context).primaryColor,
-                  alignment: TextAlign.center,
-                )
-              ],
-            );
-          }),
+              ),
+              SizedBox(height: 10),
+              customtext(
+                alignment: TextAlign.start,
+                fontWeight: FontWeight.w700,
+                color: Theme.of(context).primaryColor,
+                text: OnBordModal.onBordList[index].title,
+                fontsize: 25,
+              ),
+              SizedBox(height: 15),
+              customtext(
+                fontWeight: FontWeight.w400,
+                text: OnBordModal.onBordList[index].subTitle,
+                fontsize: 15,
+                color: Theme.of(context).primaryColor,
+                alignment: TextAlign.center,
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 
+  // Top Container (Banner)
   Widget topContainer() {
     return Container(
       width: double.infinity,
-      height: 200,
+      height: MediaQuery.of(context).size.height * 0.25, // Make this responsive
       decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assest/images/OnBordScreenTopScreen.png"),
-              fit: BoxFit.fill)),
+        image: DecorationImage(
+          image: AssetImage("assest/images/OnBordScreenTopScreen.png"),
+          fit: BoxFit.cover,
+        ),
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -153,15 +148,17 @@ class _OnboardScreen1State extends State<OnboardScreen1> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextButton(
-                  onPressed: () {
-                    SessionManager.setwelcome(true);
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>WelcomeScreen()));
-                  },
-                  child: customtext(
-                      fontWeight: FontWeight.w500,
-                      text: "Skip",
-                      fontsize: 17,
-                      color: Theme.of(context).primaryColorLight)),
+                onPressed: () {
+                  SessionManager.setwelcome(true);
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => WelcomeScreen()));
+                },
+                child: customtext(
+                  fontWeight: FontWeight.w500,
+                  text: "Skip",
+                  fontsize: 17,
+                  color: Theme.of(context).primaryColorLight,
+                ),
+              ),
             ),
           ),
         ],
@@ -169,73 +166,44 @@ class _OnboardScreen1State extends State<OnboardScreen1> {
     );
   }
 
+  // Bottom Container with Pagination
   Widget bottumContainer() {
     final data = Provider.of<AppController>(context);
     return Container(
       width: double.infinity,
-      height: 150,
+      height: 100, // Reduced height for better fitting
       decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("assest/images/OnBordScreenBottumImage.png"),
-              fit: BoxFit.fill)),
+        image: DecorationImage(
+          image: AssetImage("assest/images/OnBordScreenBottumImage.png"),
+          fit: BoxFit.cover,
+        ),
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          // Center(
-          //     child: ElevatedButton(
-          //         onPressed: () {
-          //           print(pageController.page);
-          //           if(data.getPage==OnBordModal.onBordList.length-1){
-          //             data.getPageIndex(0);
-          //             SessionManager.setwelcome(true);
-          //             Navigator.pushReplacement(context, MaterialPageRoute(builder: (builder)=>WelcomeScreen()));
-          //
-          //           }else{
-          //             pageController.animateToPage(
-          //                 pageController.page!.toInt() + 1,
-          //                 duration: Duration(microseconds: 300),
-          //                 curve: Curves.bounceIn);
-          //           }
-          //
-          //           },
-          //         style: ElevatedButton.styleFrom(
-          //           padding: EdgeInsets.symmetric(horizontal: 80,vertical: 12),
-          //           primary: Colors.white,
-          //           onPrimary: Color(0xff000E87),
-          //           shape: RoundedRectangleBorder(
-          //             borderRadius: BorderRadius.circular(50)
-          //           )
-          //         ),
-          //         child: customtext(
-          //             fontWeight: FontWeight.w400,
-          //             text: "Next",
-          //             fontsize: 18,
-          //             color: kBlackColor))),
+          // Pagination Dots
           Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
-                  OnBordModal.onBordList.length,
-                  (index) => Container(
-                        margin: EdgeInsets.all(5),
-                        height: data.getPage == index ? 16 : 14,
-                        width: data.getPage == index ? 16 : 14,
-                        decoration: BoxDecoration(
-                            color: data.getPage == index
-                                ? Colors.white
-                                : Colors.transparent,
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                                color: data.getPage == index
-                                    ? kWhiteColor
-                                    : Color(0xff011638),
-                                width: 1)),
-                      )),
+                OnBordModal.onBordList.length,
+                    (index) => Container(
+                  margin: EdgeInsets.all(5),
+                  height: data.getPage == index ? 16 : 14,
+                  width: data.getPage == index ? 16 : 14,
+                  decoration: BoxDecoration(
+                    color: data.getPage == index ? Colors.white : Colors.transparent,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: data.getPage == index ? kWhiteColor : Color(0xff011638),
+                      width: 1,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
-          SizedBox(
-            height: 20,
-          )
+          SizedBox(height: 20),
         ],
       ),
     );

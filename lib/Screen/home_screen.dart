@@ -382,56 +382,56 @@ class _HomeScreenState extends State<HomeScreen> {
                       //     ),
                       //   ],
                       // ),
-                      const SizedBox(height: 20),
-                      FutureBuilder<BooksTags>(
-                        future: bookTagFuture,
-                        builder: (context, response) {
-                          if (response.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          }
-
-                          if (response.data!.data!.isEmpty) {
-                            return Container();
-                          }
-
-                          return Row(
-                            children: List.generate(
-                              response.data!.data!.length,
-                              (index) => InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    selectedTab = index;
-                                    ebooks = ApiHelper.showebookList(
-                                        response.data!.data![index].tags!);
-                                  });
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 10.0),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0, vertical: 8.0),
-                                  decoration: BoxDecoration(
-                                      color: selectedTab == index
-                                          ? KBoxNewColor
-                                          : Colors.white,
-                                      border: Border.all(
-                                          color: KBoxNewColor, width: 0.5),
-                                      borderRadius: BorderRadius.circular(5.0)),
-                                  child: customtext(
-                                      fontWeight: FontWeight.w500,
-                                      text: response.data!.data![index].tags!,
-                                      color: selectedTab == index
-                                          ? Colors.white
-                                          : KBoxNewColor,
-                                      fontsize: 12.0),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 10),
+                      // const SizedBox(height: 20),
+                      // FutureBuilder<BooksTags>(
+                      //   future: bookTagFuture,
+                      //   builder: (context, response) {
+                      //     if (response.connectionState ==
+                      //         ConnectionState.waiting) {
+                      //       return const Center(
+                      //           child: CircularProgressIndicator());
+                      //     }
+                      //
+                      //     if (response.data!.data!.isEmpty) {
+                      //       return Container();
+                      //     }
+                      //
+                      //     return SingleChildScrollView(
+                      //       scrollDirection: Axis.horizontal,
+                      //       child: Row(
+                      //         children: List.generate(
+                      //           response.data!.data!.length,
+                      //               (index) => InkWell(
+                      //             onTap: () {
+                      //               setState(() {
+                      //                 selectedTab = index;
+                      //                 ebooks = ApiHelper.showebookList(
+                      //                     response.data!.data![index].tags!);
+                      //               });
+                      //             },
+                      //             child: Container(
+                      //               margin: const EdgeInsets.only(right: 10.0),
+                      //               padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                      //               decoration: BoxDecoration(
+                      //                 color: selectedTab == index ? KBoxNewColor : Colors.white,
+                      //                 border: Border.all(color: KBoxNewColor, width: 0.5),
+                      //                 borderRadius: BorderRadius.circular(5.0),
+                      //               ),
+                      //               child: customtext(
+                      //                 fontWeight: FontWeight.w500,
+                      //                 text: response.data!.data![index].tags!,
+                      //                 color: selectedTab == index ? Colors.white : KBoxNewColor,
+                      //                 fontsize: 12.0,
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     );
+                      //
+                      //   },
+                      // ),
+                      // const SizedBox(height: 10),
                       FutureBuilder<ShowBookListModal>(
                           future: ebooks,
                           builder: (context, snapshot) {
@@ -441,17 +441,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: CircularProgressIndicator(),
                               );
                             }
+                            final bookList = snapshot.data?.data ?? [];
+
                             //MediaQuery.of(context).size.height * 0.33
                             return ListView.builder(
-                                itemCount: snapshot.data!.data!.length,
+                                itemCount: bookList.length,
                                 shrinkWrap: true,
                                 scrollDirection: Axis.vertical,
                                 physics: NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
-                                  return EbooksWidget(
-                                    showBookListModalData:
-                                        snapshot.data!.data![index],
-                                  );
+                                  return EbooksWidget(showBookListModalData: bookList[index]);
                                 });
                           }),
                       const SizedBox(

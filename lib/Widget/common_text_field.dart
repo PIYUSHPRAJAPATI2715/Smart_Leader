@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CommonTextField extends StatelessWidget {
   final TextEditingController controller;
   final String label;
+  final List<TextInputFormatter>? inputFormatters;
   final String? hintText;
   final TextInputType keyboardType;
   final bool obscureText;
@@ -18,6 +20,7 @@ class CommonTextField extends StatelessWidget {
   const CommonTextField({
     Key? key,
     required this.controller,
+    this.inputFormatters,
     required this.label,
     this.hintText,
     this.keyboardType = TextInputType.text,
@@ -35,7 +38,7 @@ class CommonTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 13.0,right: 13,top: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 13.0, vertical: 10),
       child: TextFormField(
         controller: controller,
         readOnly: readOnly,
@@ -43,6 +46,7 @@ class CommonTextField extends StatelessWidget {
         keyboardType: keyboardType,
         validator: validator,
         onChanged: onChanged,
+        inputFormatters: inputFormatters,
         maxLines: maxLines,
         minLines: minLines,
         decoration: InputDecoration(
@@ -55,15 +59,18 @@ class CommonTextField extends StatelessWidget {
             child: Icon(suffixIcon),
           )
               : null,
-          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.brown)),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12),),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.brown),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         ),
       ),
     );
   }
 }
-
 
 class CommonPasswordField extends StatefulWidget {
   final TextEditingController controller;
@@ -86,15 +93,15 @@ class CommonPasswordField extends StatefulWidget {
 }
 
 class _CommonPasswordFieldState extends State<CommonPasswordField> {
-  bool _obscureText = true;
+  bool _obscureText = true; // Mutable password visibility state
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 13.0,right: 13,top: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 13.0, vertical: 10),
       child: TextFormField(
         controller: widget.controller,
-        obscureText: _obscureText,
+        obscureText: _obscureText, // Use the local mutable state here
         validator: widget.validator ?? _defaultValidator,
         onChanged: widget.onChanged,
         decoration: InputDecoration(
@@ -102,17 +109,31 @@ class _CommonPasswordFieldState extends State<CommonPasswordField> {
           hintText: widget.hintText ?? 'Enter your password',
           prefixIcon: const Icon(Icons.lock),
           suffixIcon: IconButton(
-            icon: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
-            onPressed: () => setState(() => _obscureText = !_obscureText),
+            icon: Icon(
+              _obscureText ? Icons.visibility_off : Icons.visibility,
+            ),
+            onPressed: _togglePasswordVisibility,
           ),
-          focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.brown)),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.brown),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         ),
       ),
     );
   }
 
+  // Toggles the visibility of the password
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscureText = !_obscureText; // Toggle visibility
+    });
+  }
+
+  // Default password validator
   String? _defaultValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'Password is required';

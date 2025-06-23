@@ -562,14 +562,14 @@ class _DownloadScreenState extends State<DownloadScreen> {
                                   height: 52,
                                   width: 52,
                                   ontap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                VideoDiscriptionScreen(
-                                                  showVideoModalData:
-                                                      showVideoList[index],
-                                                )));
+                                    // Navigator.push(
+                                    //     context,
+                                    //     MaterialPageRoute(
+                                    //         builder: (context) =>
+                                    //             VideoDiscriptionScreen(
+                                    //               showVideoModalData:
+                                    //                   showVideoList[index],
+                                    //             )));
                                   }),
                             ],
                           )

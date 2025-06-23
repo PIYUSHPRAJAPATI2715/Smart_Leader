@@ -402,7 +402,7 @@ class _BusinessJoinerFragmentState extends State<BusinessJoinerFragment> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => JoinedBarGraphDetailScreen(
-                                  type: 'line',
+                                  type: 'bar',
                                   teamId: chartList[index].teamId!)));
                     },
                     child: customtext(

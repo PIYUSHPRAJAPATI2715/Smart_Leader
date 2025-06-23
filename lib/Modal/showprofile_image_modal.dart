@@ -23,6 +23,7 @@ class Data {
   String? id;
   String? authId;
   String? provider;
+  String? phone;
   String? username;
   String? email;
   String? file;
@@ -33,6 +34,7 @@ class Data {
         this.authId,
         this.provider,
         this.username,
+        this.phone,
         this.email,
         this.file,
         this.path});
@@ -42,6 +44,7 @@ class Data {
     authId = json['auth_id'];
     provider = json['provider'];
     username = json['username'];
+    phone = json['phone'];
     email = json['email'];
     file = json['file'];
     path = json['path'];
@@ -53,6 +56,7 @@ class Data {
     data['auth_id'] = this.authId;
     data['provider'] = this.provider;
     data['username'] = this.username;
+    data['phone'] = this.phone;
     data['email'] = this.email;
     data['file'] = this.file;
     data['path'] = this.path;

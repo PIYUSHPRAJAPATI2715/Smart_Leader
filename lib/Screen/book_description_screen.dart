@@ -17,7 +17,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../Widget/bottum_navBar.dart';
 
 class BookDescriptionScreen extends StatefulWidget {
-  final ShowBookListModalData showBookListModalData;
+  final Data showBookListModalData;
 
   const BookDescriptionScreen({Key? key, required this.showBookListModalData})
       : super(key: key);
@@ -33,7 +33,7 @@ class _BookDescriptionScreenState extends State<BookDescriptionScreen> {
     Map<String, String> map = {
       "user_id": SessionManager.getUserID(),
       "book_id": widget.showBookListModalData.id!,
-      "book_price": widget.showBookListModalData.bookPrice!
+      // "book_price": widget.showBookListModalData.bookPrice!
     };
 
     Helper.showLoaderDialog(context, message: 'Please wait...');
@@ -121,20 +121,20 @@ class _BookDescriptionScreenState extends State<BookDescriptionScreen> {
                                     : kgreenColor,
                               ),
                               const SizedBox(height: 15.0),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 8.0),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(25),
-                                    color: Colors.blueGrey),
-                                child: customtext(
-                                  fontWeight: FontWeight.w600,
-                                  text:
-                                      widget.showBookListModalData.tagId ?? '',
-                                  fontsize: 10.0,
-                                  color: Colors.white,
-                                ),
-                              ),
+                              // Container(
+                              //   padding: const EdgeInsets.symmetric(
+                              //       horizontal: 10, vertical: 8.0),
+                              //   decoration: BoxDecoration(
+                              //       borderRadius: BorderRadius.circular(25),
+                              //       color: Colors.blueGrey),
+                              //   child: customtext(
+                              //     fontWeight: FontWeight.w600,
+                              //     text:
+                              //         widget.showBookListModalData.tagId ?? '',
+                              //     fontsize: 10.0,
+                              //     color: Colors.white,
+                              //   ),
+                              // ),
                               const SizedBox(height: 15.0),
                               custom_Button(
                                   onTap: () {
@@ -321,21 +321,21 @@ class _BookDescriptionScreenState extends State<BookDescriptionScreen> {
                                     ),
                                   ),
                                   const SizedBox(width: 15.0),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 8.0),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(25),
-                                        color: Colors.blueGrey),
-                                    child: customtext(
-                                      fontWeight: FontWeight.w600,
-                                      text:
-                                          widget.showBookListModalData.tagId ??
-                                              '',
-                                      fontsize: 10.0,
-                                      color: Colors.white,
-                                    ),
-                                  )
+                                  // Container(
+                                  //   padding: const EdgeInsets.symmetric(
+                                  //       horizontal: 10, vertical: 8.0),
+                                  //   decoration: BoxDecoration(
+                                  //       borderRadius: BorderRadius.circular(25),
+                                  //       color: Colors.blueGrey),
+                                  //   child: customtext(
+                                  //     fontWeight: FontWeight.w600,
+                                  //     text:
+                                  //         widget.showBookListModalData.tagId ??
+                                  //             '',
+                                  //     fontsize: 10.0,
+                                  //     color: Colors.white,
+                                  //   ),
+                                  // )
                                 ],
                               ),
                               customtext(
@@ -347,72 +347,72 @@ class _BookDescriptionScreenState extends State<BookDescriptionScreen> {
                               const SizedBox(
                                 height: 25,
                               ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  BookAmountWidget(
-                                    amount: widget
-                                        .showBookListModalData.eBookPrice!,
-                                    image: 'ebook.png',
-                                    onClick: () {
-                                      bookType = 'Ebook';
-                                      showBuyBottomSheet(widget
-                                          .showBookListModalData.eBookPrice!);
-                                      // setState(() {
-                                      //   bookType = 'Ebook';
-                                      // });
-                                      // order(widget
-                                      //     .showBookListModalData
-                                      //     .eBookPrice!, widget
-                                      //     .showBookListModalData.id!);
-                                    },
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                  BookAmountWidget(
-                                    amount: widget
-                                        .showBookListModalData.audioPrice!,
-                                    image: 'audio_book.png',
-                                    onClick: () {
-                                      bookType = 'Audio';
-                                      showBuyBottomSheet(widget
-                                          .showBookListModalData.audioPrice!);
-                                      // setState(() {
-                                      //   bookType = 'Audio';
-                                      // });
-                                      // order(widget
-                                      //     .showBookListModalData
-                                      //     .audioPrice!, widget
-                                      //     .showBookListModalData.id!);
-                                    },
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                  BookAmountWidget(
-                                    amount: widget
-                                        .showBookListModalData.amazonPrice!,
-                                    image: 'amazon_icon.png',
-                                    onClick: () async {
-                                      String url = widget
-                                          .showBookListModalData.amazonLink!;
-                                      await launchUrl(Uri.parse(url),
-                                          mode: LaunchMode.externalApplication);
-                                    },
-                                  ),
-                                  const SizedBox(width: 8.0),
-                                  BookAmountWidget(
-                                    amount: widget
-                                        .showBookListModalData.flipkartPrice!,
-                                    image: 'flipkart.png',
-                                    onClick: () async {
-                                      String url = widget
-                                          .showBookListModalData.flipkartLink!;
-                                      await launchUrl(Uri.parse(url),
-                                          mode: LaunchMode.externalApplication);
-                                    },
-                                  ),
-                                ],
-                              ),
+                              // Row(
+                              //   crossAxisAlignment: CrossAxisAlignment.start,
+                              //   mainAxisAlignment:
+                              //       MainAxisAlignment.spaceEvenly,
+                              //   children: [
+                              //     BookAmountWidget(
+                              //       amount: widget
+                              //           .showBookListModalData.eBookPrice!,
+                              //       image: 'ebook.png',
+                              //       onClick: () {
+                              //         bookType = 'Ebook';
+                              //         showBuyBottomSheet(widget
+                              //             .showBookListModalData.eBookPrice!);
+                              //         // setState(() {
+                              //         //   bookType = 'Ebook';
+                              //         // });
+                              //         // order(widget
+                              //         //     .showBookListModalData
+                              //         //     .eBookPrice!, widget
+                              //         //     .showBookListModalData.id!);
+                              //       },
+                              //     ),
+                              //     const SizedBox(width: 8.0),
+                              //     // BookAmountWidget(
+                              //     //   amount: widget
+                              //     //       .showBookListModalData.audioPrice!,
+                              //     //   image: 'audio_book.png',
+                              //     //   onClick: () {
+                              //     //     bookType = 'Audio';
+                              //     //     showBuyBottomSheet(widget
+                              //     //         .showBookListModalData.audioPrice!);
+                              //     //     // setState(() {
+                              //     //     //   bookType = 'Audio';
+                              //     //     // });
+                              //     //     // order(widget
+                              //     //     //     .showBookListModalData
+                              //     //     //     .audioPrice!, widget
+                              //     //     //     .showBookListModalData.id!);
+                              //     //   },
+                              //     // ),
+                              //     const SizedBox(width: 8.0),
+                              //     // BookAmountWidget(
+                              //     //   amount: widget
+                              //     //       .showBookListModalData.amazonPrice!,
+                              //     //   image: 'amazon_icon.png',
+                              //     //   onClick: () async {
+                              //     //     String url = widget
+                              //     //         .showBookListModalData.amazonLink!;
+                              //     //     await launchUrl(Uri.parse(url),
+                              //     //         mode: LaunchMode.externalApplication);
+                              //     //   },
+                              //     // ),
+                              //     const SizedBox(width: 8.0),
+                              //     // BookAmountWidget(
+                              //     //   amount: widget
+                              //     //       .showBookListModalData.flipkartPrice!,
+                              //     //   image: 'flipkart.png',
+                              //     //   onClick: () async {
+                              //     //     String url = widget
+                              //     //         .showBookListModalData.flipkartLink!;
+                              //     //     await launchUrl(Uri.parse(url),
+                              //     //         mode: LaunchMode.externalApplication);
+                              //     //   },
+                              //     // ),
+                              //   ],
+                              // ),
                               const SizedBox(height: 7),
                               const SizedBox(height: 10.0),
                               InkWell(
@@ -423,9 +423,12 @@ class _BookDescriptionScreenState extends State<BookDescriptionScreen> {
                                         String url =
                                             widget.showBookListModalData.path! +
                                                 widget.showBookListModalData
-                                                    .audioFile!;
+                                                    .bookAudio!;
+                                        print(url);
                                         return DialogAudioPlayerWidget(
-                                            url: url);
+                                            url: url, title: widget.showBookListModalData
+                                            .bookName!, auther: widget.showBookListModalData
+                                            .writerName!,);
                                       });
                                 },
                                 child: Container(
@@ -470,12 +473,12 @@ class _BookDescriptionScreenState extends State<BookDescriptionScreen> {
                             const SizedBox(
                               height: 15,
                             ),
-                            customtext(
-                              fontWeight: FontWeight.w400,
-                              text: widget.showBookListModalData.description!,
-                              fontsize: 13,
-                              color: Theme.of(context).primaryColor,
-                            ),
+                            // customtext(
+                            //   fontWeight: FontWeight.w400,
+                            //   text: widget.showBookListModalData.description!,
+                            //   fontsize: 13,
+                            //   color: Theme.of(context).primaryColor,
+                            // ),
                             const SizedBox(
                               height: 70,
                             ),

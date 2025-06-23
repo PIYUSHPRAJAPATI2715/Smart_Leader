@@ -473,6 +473,7 @@ class _EditCreatConnectionWidgetState extends State<EditCreatConnectionWidget> {
                             : kscafolledColor,
                     valueType: occupation),
                 const SizedBox(height: 8),
+                if (isMeetYes || isMeetNo)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -484,6 +485,7 @@ class _EditCreatConnectionWidgetState extends State<EditCreatConnectionWidget> {
                       fontsize: 14.0,
                     ),*/
                     const SizedBox(height: 5.0),
+                    // if (isMeetYes || isMeetNo)
                     customtext(
                       fontWeight: FontWeight.w600,
                       text: 'Has meeting happened?',
@@ -491,6 +493,7 @@ class _EditCreatConnectionWidgetState extends State<EditCreatConnectionWidget> {
                       fontsize: 12.0,
                     ),
                     const SizedBox(height: 5.0),
+                    // if (isMeetYes || isMeetNo)
                     Row(
                       children: [
                         CustomRadioWidget(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -550,300 +551,127 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                                         (MediaQuery.of(context).size.height /
                                             1.58)),
                             itemCount: showNoteList.length,
-                            itemBuilder: (context, index) {
-                              var myJSON = jsonDecode(showNoteList[index].description!.replaceAll('\n', '\\n'));
+                        itemBuilder: (context, index) {
+                          final description = showNoteList[index].description ?? "";
 
-                              //todo: uncomment these lines : for quill editor
-                              _controller = QuillController(
-
-                                readOnly: true,
-                                document: Document.fromJson(myJSON),
-                                selection:
-                                    const TextSelection.collapsed(offset: 0),
-                              );
-
-                              return InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ShowNoteDetailScreen(
-                                                noteModalData:
-                                                    showNoteList[index],
-                                                folderName: folderName,
-                                              ))).then((value) => {
-                                        setState(() {
-                                          // showNaote(
-                                          //     folderid);
-                                          checkInternet(folderid);
-                                        })
-                                      });
-                                  ;
-                                },
-                                onLongPress: () {
-                                  bool isSelected =
-                                      !showNoteList[index].isSelected;
-                                  ShowNoteModalData showNote =
-                                      ShowNoteModalData(
-                                    isSelected: isSelected,
-                                    title: showNoteList[index].title,
-                                    userId: showNoteList[index].userId,
-                                    strtotime: showNoteList[index].strtotime,
-                                    date: showNoteList[index].date,
-                                    id: showNoteList[index].id,
-                                    time: showNoteList[index].time,
-                                    path: showNoteList[index].path,
-                                    description:
-                                        showNoteList[index].description,
-                                    folderId: showNoteList[index].folderId,
-                                  );
-
-                                  int idx = showNoteList.indexWhere(
-                                      (element) => element.id == showNote.id);
-                                  showNoteList[idx].isSelected =
-                                      !showNoteList[idx].isSelected;
-                                  setState(() {
-                                    if (idList
-                                        .contains(showNoteList[index].id)) {
-                                      idList.remove(showNoteList[index].id);
-                                    } else {
-                                      idList.add(showNoteList[index].id!);
-                                    }
-                                  });
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 10),
-                                  decoration: BoxDecoration(
-                                    border:Border.all(color: KBoxNewColor,width: 1),
-                                    color: SessionManager.getTheme() == true
-                                        ? kscafolledColor
-                                        :Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Expanded(
-                                            child: Row(
-                                              children: [
-                                                showNoteList[index]
-                                                            .isSelected ==
-                                                        true
-                                                    ? Container(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(2),
-                                                        decoration: BoxDecoration(
-                                                            border: Border.all(
-                                                                color: SessionManager
-                                                                            .getTheme() ==
-                                                                        true
-                                                                    ? kWhiteColor
-                                                                    : kBlackColor,
-                                                                width: 2),
-                                                            color: kredColor,
-                                                            shape: BoxShape
-                                                                .circle),
-                                                        child: const Center(
-                                                            child: Icon(
-                                                          Icons.done,
-                                                          size: 15,
-                                                          color: kWhiteColor,
-                                                        )))
-                                                    : Container(),
-                                                const SizedBox(
-                                                  width: 20,
-                                                ),
-                                                Expanded(
-                                                  child: customtext(
-                                                    fontWeight: FontWeight.w500,
-                                                    text: showNoteList[index]
-
-                                                        .title!,
-                                                    maxLine: 2,
-                                                    fontsize: 16,
-                                                    color: Theme.of(context)
-                                                        .primaryColor,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          // Column(
-                                          //   children: [
-                                          //     showNoteList[index].isSelected ==
-                                          //             true
-                                          //         ? Container()
-                                          //         : SizedBox(
-                                          //             width: 25,
-                                          //             height: 25,
-                                          //             child: SimplePopUp(
-                                          //                 isMoveShow: isNetwork,
-                                          //                 onChanged: (value) {
-                                          //                   if (value == 1) {
-                                          //                     Map<String,
-                                          //                             String>
-                                          //                         map = {
-                                          //                       "user_id":
-                                          //                           SessionManager
-                                          //                               .getUserID(),
-                                          //                       "folder_id":
-                                          //                           folderid
-                                          //                     };
-                                          //                     Navigator.push(
-                                          //                         context,
-                                          //                         MaterialPageRoute(
-                                          //                             builder: (context) => EditNoteWidget(
-                                          //                                 folderName:
-                                          //                                     folderName,
-                                          //                                 showNoteModalData:
-                                          //                                     showNoteList[index]))).then(
-                                          //                         (value) => {
-                                          //                               setState(
-                                          //                                   () {
-                                          //                                 // showNaote(
-                                          //                                 //     folderid);
-                                          //                                 checkInternet(
-                                          //                                     folderid);
-                                          //                               })
-                                          //                             });
-                                          //                   } else if (value ==
-                                          //                       2) {
-                                          //                   } else if (value ==
-                                          //                       3) {
-                                          //                     /*
-                                          //                     setState(() {
-                                          //                       delete(
-                                          //                           showNoteList[
-                                          //                                   index]
-                                          //                               .id!);
-                                          //                     });
-                                          //                     */
-                                          //                     showDeleteDialog(
-                                          //                         showNoteList[
-                                          //                                 index]
-                                          //                             .id!);
-                                          //                     return;
-                                          //                   } else if (value ==
-                                          //                       4) {
-                                          //                     showDialog(
-                                          //                         context:
-                                          //                             context,
-                                          //                         builder:
-                                          //                             (context) {
-                                          //                           return MoveNoteWidget(
-                                          //                             showfolderData:
-                                          //                                 widget
-                                          //                                     .showfolderData,
-                                          //                             noteId: showNoteList[
-                                          //                                     index]
-                                          //                                 .id!,
-                                          //                           );
-                                          //                         }).then((value) {
-                                          //                       if (value ==
-                                          //                           true) {
-                                          //                         setState(() {
-                                          //                           showNaote(
-                                          //                               folderid);
-                                          //                         });
-                                          //                       }
-                                          //                     });
-                                          //                   }
-                                          //                 },
-                                          //                 color: Theme.of(
-                                          //                         context)
-                                          //                     .primaryColor)),
-                                          //   ],
-                                          // ),
-                                        ],
-                                      ),
-                                      /*Expanded(
-                                        child: quill.QuillProvider(
-                                          configurations: QuillConfigurations(
-                                            controller: _controller,
-                                            sharedConfigurations:
-                                                const QuillSharedConfigurations(
-                                              locale: Locale('de'),
-                                            ),
-                                          ),
-                                          child: Expanded(
-                                            child: QuillEditor.basic(
-                                              configurations:
-                                                  const QuillEditorConfigurations(
-                                                readOnly: true, controller: _controller,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        ),*/
-                                      //todo: uncomment these lines : for quill editor
-
-                                      Divider(
-                                        thickness: 2,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-
-                                          Expanded(
-                                            child: Row(
-                                              children: [
-                                                customtext(
-                                                    fontWeight: FontWeight.w500,
-                                                    text: 'Last Edited : ',
-                                                    fontsize: 10),
-                                                customtext(
-                                                  fontWeight: FontWeight.w400,
-                                                  text:
-                                                      showNoteList[index].date!,
-                                                  fontsize: 10,
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                ),
-                                                const SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Icon(
-                                                  Icons.calendar_month,
-                                                  size: 12,
-                                                  color: Theme.of(context)
-                                                      .primaryColor,
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          // customtext(
-                                          //     fontWeight: FontWeight.w600,
-                                          //     text: 'View',
-                                          //     fontsize: 12)
-                                        ],
-                                      ),
-
-                                      Expanded(
-                                        child: QuillEditor.basic(
-                                          controller: _controller,
-                                          // readOnly:
-                                          // true // true for view only mode
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      )
-                                    ],
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ShowNoteDetailScreen(
+                                    noteModalData: showNoteList[index],
+                                    folderName: folderName,
                                   ),
                                 ),
-                              );
+                              ).then((value) {
+                                setState(() {
+                                  checkInternet(folderid);
+                                });
+                              });
                             },
-                          ),
+                            onLongPress: () {
+                              bool isSelected = !showNoteList[index].isSelected;
+                              showNoteList[index].isSelected = isSelected;
+                              setState(() {
+                                if (idList.contains(showNoteList[index].id)) {
+                                  idList.remove(showNoteList[index].id);
+                                } else {
+                                  idList.add(showNoteList[index].id!);
+                                }
+                              });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: KBoxNewColor, width: 1),
+                                color: SessionManager.getTheme() == true ? kscafolledColor : Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      if (showNoteList[index].isSelected)
+                                        Container(
+                                          padding: const EdgeInsets.all(2),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: SessionManager.getTheme() == true ? kWhiteColor : kBlackColor,
+                                              width: 2,
+                                            ),
+                                            color: kredColor,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: const Center(
+                                            child: Icon(
+                                              Icons.done,
+                                              size: 15,
+                                              color: kWhiteColor,
+                                            ),
+                                          ),
+                                        ),
+                                      const SizedBox(width: 20),
+                                      Expanded(
+                                        child: customtext(
+                                          fontWeight: FontWeight.w500,
+                                          text: showNoteList[index].title ?? "",
+                                          maxLine: 2,
+                                          fontsize: 16,
+
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Divider(
+                                    thickness: 2,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  // Render HTML description here
+                                  Expanded(
+                                    child: SingleChildScrollView(
+                                      child:customtext(
+                                        fontWeight: FontWeight.w500,
+                                        text: showNoteList[index].description ?? "",
+                                        // maxLine: 2,
+                                        fontsize: 16,
+
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      customtext(
+                                        fontWeight: FontWeight.w500,
+                                        text: 'Last Edited : ',
+                                        fontsize: 10,
+                                      ),
+                                      customtext(
+                                        fontWeight: FontWeight.w400,
+                                        text: showNoteList[index].date ?? "",
+                                        fontsize: 10,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Icon(
+                                        Icons.calendar_month,
+                                        size: 12,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+
+                    ),
                   ],
                 ),
               ),

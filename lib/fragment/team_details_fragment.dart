@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../Componants/Custom_text.dart';
 import '../Componants/custom_bottun.dart';
@@ -164,9 +165,16 @@ class _TeamDetailsFragmentState extends State<TeamDetailsFragment> {
       ),
     );
   }
-  void addBranch() {
+  void addBranch() async {
     if (_branchNameController.text.isEmpty) {
-      Helper.toastMassage('Enter branch name', Colors.red);
+      Helper.toastMassage('Enter team name', Colors.red);
+      return;
+    }
+
+    Branch branchData = await _branchFuture;
+
+    if (branchData.data != null && branchData.data!.length >= 6) {
+      Helper.toastMassage('Maximum 6 teams allowed', Colors.red);
       return;
     }
 
@@ -178,17 +186,27 @@ class _TeamDetailsFragmentState extends State<TeamDetailsFragment> {
     Helper.showLoaderDialog(context, message: 'Adding...');
     ApiHelper.addBranch(body).then((value) {
       Navigator.pop(context);
-      if (value.message == 'Team Add Successfully ') {
-        Helper.showSnackVar(value.message!, Colors.green, context);
+
+      print("🟢 API RESPONSE: ${value.toString()}");
+      print("🟢 MESSAGE: ${value.message}");
+
+      if (value.message == "Branch Add Successfully ") {
+        Fluttertoast.showToast(msg: value.message ?? "Success", backgroundColor: Colors.green);
+
+        FocusScope.of(context).unfocus(); // ✅ hide keyboard
+
         _branchNameController.clear();
         setState(() {
-          _branchFuture = getBranch();
+          _branchFuture = getBranch(); // refresh list
         });
       } else {
-        Helper.showSnackVar(value.message!, Colors.red, context);
+        Fluttertoast.showToast(msg: value.message ?? "Something went wrong", backgroundColor: Colors.red);
       }
     });
   }
+
+
+
 
   void checkBranchContainsTeam(String branchId) {
     Helper.showLoaderDialog(context, message: 'Please wait...');

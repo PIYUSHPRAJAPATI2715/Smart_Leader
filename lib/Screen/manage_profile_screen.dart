@@ -106,15 +106,17 @@ class _ManageProfileScreenState extends State<ManageProfileScreen> {
     }
     Map<String, String> body = {
       "user_id": SessionManager.getUserID(),
-      "username": NameController.text
+      "username": NameController.text,
+      "number": PhoneNumberController.text
     };
 
-    Helper.showLoaderDialog(context, message: "Updating...");
+    Helper.showLoaderDialog(context, message: "Profile updated");
     ApiHelper.updatedName(body).then((login) {
       Navigator.pop(context);
       if (login.message == 'Update Name Successfully') {
         SessionManager.setFirstName(NameController.text);
-        Helper.showSnackVar('Successfully Login', Colors.green, context);
+        SessionManager.setUserMobile(PhoneNumberController.text);
+        Helper.showSnackVar('Profile update Successfully', Colors.green, context);
       } else {
         Helper.showSnackVar('Error', Colors.red, context);
       }
@@ -190,6 +192,7 @@ class _ManageProfileScreenState extends State<ManageProfileScreen> {
                       }
                       NameController.text = snapshot.data!.data!.username!;
                       emailController.text = snapshot.data!.data!.email!;
+                      PhoneNumberController.text = snapshot.data!.data!.phone!;
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -262,9 +265,9 @@ class _ManageProfileScreenState extends State<ManageProfileScreen> {
                               hintfont: 14,
                               lablefont: 18,
                               hight: 50,
-                              title: "Afsar Khan",
+                              title: "Enter your name",
                               controller: NameController,
-                              hint: "Afsar Khan",
+                              hint: "Enter your name",
                               inputAction: TextInputAction.next,
                               inputType: TextInputType.text,
                               lableName: "Name"),
@@ -278,7 +281,7 @@ class _ManageProfileScreenState extends State<ManageProfileScreen> {
                               enable: false,
                               title: "AfsarKhan@gmail.c0m",
                               controller: emailController,
-                              hint: "Afsar Khan",
+                              hint: "Enter your email",
                               inputAction: TextInputAction.next,
                               inputType: TextInputType.text,
                               lableName: "Email"),
@@ -291,7 +294,7 @@ class _ManageProfileScreenState extends State<ManageProfileScreen> {
                               hight: 50,
                               title: "Phone Number",
                               controller: PhoneNumberController,
-                              hint: "Afsar Khan",
+                              hint: "Enter your phone number",
                               inputAction: TextInputAction.next,
                               inputType: TextInputType.text,
                               lableName: "Phone Number"),

@@ -528,22 +528,30 @@ class ApiHelper {
 
     try {
       final response = await http.post(uri, body: {'tag': tag});
+
+      // 👇 Print status and response body
+      print('Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
       if (response.statusCode == 200) {
         return ShowBookListModal.fromJson(jsonDecode(response.body));
       } else {
         return ShowBookListModal(message: 'Something went wrong!');
       }
     } catch (e) {
+      print('Exception: $e');
       return ShowBookListModal(message: 'Something went wrong!');
     }
   }
 
-  static Future<ShowBookListModal> searchBook(String search) async {
-    Uri uri = Uri.parse(ApiNetwork.searchBook);
+
+  static Future<ShowBookListModal> searchBook(String keyword) async {
+    final Uri uri = Uri.parse(
+      'https://ruparnatechnology.com/Smartleader/Api/process.php?action=book_search&keyword=$keyword',
+    );
 
     try {
-      Map<String, String> body = {'word': search};
-      final response = await http.post(uri, body: body);
+      final response = await http.get(uri);
 
       if (response.statusCode == 200) {
         return ShowBookListModal.fromJson(jsonDecode(response.body));
@@ -554,6 +562,27 @@ class ApiHelper {
       return ShowBookListModal(message: 'Something went wrong!');
     }
   }
+
+
+  static Future<ShowVideosModal> searchVideo(String keyword) async {
+    final Uri uri = Uri.parse(
+      'https://ruparnatechnology.com/Smartleader/Api/process.php?action=video_search&keyword=$keyword',
+    );
+
+    try {
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        return ShowVideosModal.fromJson(jsonDecode(response.body));
+      } else {
+        return ShowVideosModal(message: 'Something went wrong!');
+      }
+    } catch (e) {
+      return ShowVideosModal(message: 'Something went wrong!');
+    }
+  }
+
+
 
   static Future<ShowBookListModal> newaddedbookList() async {
     Uri uri = Uri.parse(ApiNetwork.newEditBookList);
@@ -1395,7 +1424,7 @@ class ApiHelper {
     }
   }
   //video name
-  static Future<VideosName> getvideosName() async {
+  static Future<ShowVideosModal> getvideosName() async {
     final url = Uri.parse(ApiNetwork.get_video_names);
 
     try {
@@ -1405,22 +1434,22 @@ class ApiHelper {
         final decodedData = jsonDecode(response.body);
 
         if (decodedData['status'] == true) {
-          return VideosName.fromJson(decodedData);
+          return ShowVideosModal.fromJson(decodedData);
         } else {
-          return VideosName(status: false, message: decodedData['message'] ?? 'Unknown error');
+          return ShowVideosModal( message: decodedData['message'] ?? 'Unknown error');
         }
       } else {
         if (kDebugMode) {
           print('HTTP Error: ${response.statusCode}, Body: ${response.body}');
         }
-        return VideosName(status: false, message: 'Data not found');
+        return ShowVideosModal(  message: 'Data not found');
       }
     } catch (e, stackTrace) {
       if (kDebugMode) {
         print('Exception: $e');
         print('StackTrace: $stackTrace');
       }
-      return VideosName(status: false, message: 'Something went wrong');
+      return ShowVideosModal( message: 'Something went wrong');
     }
   }
 }

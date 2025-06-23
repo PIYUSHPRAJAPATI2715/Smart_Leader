@@ -10,9 +10,11 @@ import 'package:smart_leader/Widget/vedio_player_screen.dart';
 import 'package:smart_leader/Widget/youtube_player.dart';
 
 import '../Helper/Api.helper.dart';
+import '../Modal/show_videos_modal.dart';
 
 class VideoDiscriptionScreen extends StatefulWidget {
-  ShowVideoModalData showVideoModalData;
+  final ShowVideosModalData showVideoModalData;
+
    VideoDiscriptionScreen({Key? key,required this.showVideoModalData}) : super(key: key);
 
   @override
@@ -87,7 +89,7 @@ class _VideoDiscriptionScreenState extends State<VideoDiscriptionScreen> {
                     borderRadius: BorderRadius.circular(20),
                     image: DecorationImage(image: NetworkImage(
                         widget.showVideoModalData.path! +
-                            widget.showVideoModalData.video!.image!),fit: BoxFit.fill)
+                            widget.showVideoModalData.image!),fit: BoxFit.fill)
                 ),
                 child: Center(
                   child:Image.asset("assest/png_icon/playIvon.png",height: 48,width: 48,),
@@ -99,7 +101,7 @@ class _VideoDiscriptionScreenState extends State<VideoDiscriptionScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 20,),
-                    customtext(fontWeight: FontWeight.w600, text: widget.showVideoModalData.video!.videoName!, fontsize: 20,
+                    customtext(fontWeight: FontWeight.w600, text: widget.showVideoModalData.videoName!, fontsize: 20,
                     color: Theme.of(context).primaryColor,),
                     SizedBox(height: 30,),
                     // customtext(fontWeight: FontWeight.w400, text: "10:30", fontsize: 15,

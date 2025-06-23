@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:smart_leader/Componants/Custom_text.dart';
 import 'package:smart_leader/Componants/custom_bottun.dart';
 import 'package:smart_leader/Componants/dialog_audio_player_widget.dart';
@@ -13,7 +14,7 @@ import 'package:smart_leader/Widget/bottum_navBar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EbooksWidget extends StatefulWidget {
-  ShowBookListModalData showBookListModalData;
+  Data showBookListModalData;
 
   EbooksWidget({Key? key, required this.showBookListModalData})
       : super(key: key);
@@ -31,7 +32,7 @@ class _EbooksWidgetState extends State<EbooksWidget> {
     Map<String, String> map = {
       "user_id": SessionManager.getUserID(),
       "book_id": widget.showBookListModalData.id!,
-      "book_price": widget.showBookListModalData.bookPrice!
+      // "book_price": widget.showBookListModalData.bookPrice!
     };
 
     Helper.showLoaderDialog(context, message: 'Please wait...');
@@ -133,20 +134,20 @@ class _EbooksWidgetState extends State<EbooksWidget> {
                                     : kgreenColor,
                               ),
                               SizedBox(height: 15.0),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 8.0),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(25),
-                                    color: Colors.blueGrey),
-                                child: customtext(
-                                  fontWeight: FontWeight.w600,
-                                  text:
-                                      widget.showBookListModalData.tagId ?? '',
-                                  fontsize: 10.0,
-                                  color: Colors.white,
-                                ),
-                              ),
+                              // Container(
+                              //   padding: const EdgeInsets.symmetric(
+                              //       horizontal: 10, vertical: 8.0),
+                              //   decoration: BoxDecoration(
+                              //       borderRadius: BorderRadius.circular(25),
+                              //       color: Colors.blueGrey),
+                              //   child: customtext(
+                              //     fontWeight: FontWeight.w600,
+                              //     text:
+                              //         widget.showBookListModalData.tagId ?? '',
+                              //     fontsize: 10.0,
+                              //     color: Colors.white,
+                              //   ),
+                              // ),
                               SizedBox(height: 15.0),
                               custom_Button(
                                   onTap: () {
@@ -226,202 +227,131 @@ class _EbooksWidgetState extends State<EbooksWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 9.0),
       child: Container(
-        child: WInnerNeumorphismWidget(
-          child: Row(
-            children: [
-              Image.network(
-                height: 170,
-                width: 120,
-                fit: BoxFit.fill,
-                widget.showBookListModalData.path! +
-                    widget.showBookListModalData.image!,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 5,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(15),
+                bottomLeft: Radius.circular(15),
               ),
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => BookDescriptionScreen(
-                              showBookListModalData: widget.showBookListModalData,
-                            )));
-                  },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: 10),
-                            customtext(
-                              fontWeight: FontWeight.w700,
-                              text: widget.showBookListModalData.bookName!,
-                              fontsize: 15,
-                              maxLine: 1,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            const SizedBox(height: 5.0),
-                            customtext(
-                              fontWeight: FontWeight.w500,
-                              text:
-                                  'By ${widget.showBookListModalData.writerName!}',
-                              fontsize: 12,
-                              maxLine: 1,
-                              color: Colors.grey,
-                            ),
-                            const SizedBox(height: 5.0),
-                            customtext(
-                              fontWeight: FontWeight.w500,
-                              text: widget.showBookListModalData.description!,
-                              fontsize: 12,
-                              maxLine: 2,
-                              color: Colors.black54,
-                            ),
-                            const SizedBox(height: 5.0),
-                            // Row(
-                            //   crossAxisAlignment: CrossAxisAlignment.start,
-                            //   mainAxisAlignment: MainAxisAlignment.center,
-                            //   children: [
-                            //     BookAmountWidget(
-                            //       amount: widget.showBookListModalData.eBookPrice!,
-                            //       image: 'ebook.png',
-                            //       onClick: () {
-                            //         bookType = 'Ebook';
-                            //         // setState(() {
-                            //         //   bookType = 'Ebook';
-                            //         // });
-                            //         // order(widget.showBookListModalData.eBookPrice!,
-                            //         //     widget.showBookListModalData.id!);
-                            //         showBuyBottomSheet(
-                            //             widget.showBookListModalData.eBookPrice!);
-                            //       },
-                            //     ),
-                            //     const SizedBox(width: 8.0),
-                            //     BookAmountWidget(
-                            //       amount: widget.showBookListModalData.audioPrice!,
-                            //       image: 'audio_book.png',
-                            //       onClick: () {
-                            //         bookType = 'Audio';
-                            //         // setState(() {
-                            //         //   bookType = 'Audio';
-                            //         // });
-                            //         // order(widget.showBookListModalData.audioPrice!,
-                            //         //     widget.showBookListModalData.id!);
-                            //         showBuyBottomSheet(
-                            //             widget.showBookListModalData.audioPrice!);
-                            //       },
-                            //     ),
-                            //     const SizedBox(width: 8.0),
-                            //     BookAmountWidget(
-                            //       amount: widget.showBookListModalData.amazonPrice!,
-                            //       image: 'amazon_icon.png',
-                            //       onClick: () async {
-                            //         String url = widget.showBookListModalData.amazonLink!;
-                            //         await launchUrl(Uri.parse(url),
-                            //             mode: LaunchMode.externalApplication);
-                            //       },
-                            //     ),
-                            //     const SizedBox(width: 8.0),
-                            //     BookAmountWidget(
-                            //       amount: widget.showBookListModalData.flipkartPrice!,
-                            //       image: 'flipkart.png',
-                            //       onClick: () async {
-                            //         String url =
-                            //             widget.showBookListModalData.flipkartLink!;
-                            //         await launchUrl(Uri.parse(url),
-                            //             mode: LaunchMode.externalApplication);
-                            //       },
-                            //     ),
-                            //   ],
-                            // ),
-                            // const SizedBox(height: 8.0),
-                            SizedBox(
-                              height: 50,
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: InkWell(
-                                    onTap: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            String url =
-                                                widget.showBookListModalData.path! +
-                                                    widget.showBookListModalData
-                                                        .audioFile!;
-                                            return DialogAudioPlayerWidget(
-                                                url: url);
-                                          });
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20.0, vertical: 3.0),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.all(Radius.circular(5)),
-                                          border: Border.all(color: KBoxNewColor)),
-                                      child: FittedBox(
-                                        fit: BoxFit.scaleDown,
-                                        child: customtext(
-                                          alignment: TextAlign.center,
-                                          fontWeight: FontWeight.w600,
-                                          text: 'Play',
-                                          fontsize: 15,
-                                          color: Colors.black,
-                                        ),
-                                      )
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                Expanded(
-                                  child: InkWell(
-                                    onTap: () {
-                                      _shareOnWhatsApp( widget.showBookListModalData.path! +
-                                          widget.showBookListModalData
-                                              .audioFile!);
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20.0, vertical: 3.0),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.all(Radius.circular(5)),
-                                          border: Border.all(color: KBoxNewColor)),
-                                      child: FittedBox(
-                                        fit: BoxFit.scaleDown,
-                                        child: customtext(
-                                          fontWeight: FontWeight.w600,
-                                          alignment: TextAlign.center,
-                                          text: 'Share',
-                                          fontsize: 15,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+              child: InkWell(
+                onTap: (){
+                  final url = widget.showBookListModalData.path! + widget.showBookListModalData.bookAudio!;
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return DialogAudioPlayerWidget(
+                        url: url,
+                        title: widget.showBookListModalData.bookName!,
+                        auther: widget.showBookListModalData.writerName!,
+                      );
+                    },
+                  );
+                },
+                child: Image.network(
+                  widget.showBookListModalData.path! + widget.showBookListModalData.image!,
+                  height: 160,
+                  width: 110,
+                  fit: BoxFit.cover,
                 ),
               ),
-            ],
-          ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.showBookListModalData.bookName ?? '',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      'By ${widget.showBookListModalData.writerName}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 50),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              final url = widget.showBookListModalData.path! + widget.showBookListModalData.bookAudio!;
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return DialogAudioPlayerWidget(
+                                    url: url,
+                                    title: widget.showBookListModalData.bookName!,
+                                    auther: widget.showBookListModalData.writerName!,
+                                  );
+                                },
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              backgroundColor: KBoxNewColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                            icon: const Icon(Icons.play_arrow, size: 18),
+                            label: const Text("Play"),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: () {
+                              final url = widget.showBookListModalData.path! + widget.showBookListModalData.bookAudio!;
+                              Share.share('Check this out: $url');
+                            },
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              side: BorderSide(color: KBoxNewColor),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                            icon: const Icon(Icons.share, size: 18),
+                            label: const Text("Share"),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );
   }
+
 }
 
 class BookAmountWidget extends StatelessWidget {

@@ -26,6 +26,8 @@ import 'package:smart_leader/Screen/manage_profile_screen.dart';
 import 'package:smart_leader/Widget/custom_top_container.dart';
 import 'package:http/http.dart' as http;
 
+import '../Widget/bottum_navBar.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
@@ -145,7 +147,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   InkWell(
                       onTap: () {
 
-                        Navigator.pop(context);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => BottumNavBar()),
+                        );
 
                       },
                       child: Image.asset(

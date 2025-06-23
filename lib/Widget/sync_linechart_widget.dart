@@ -89,7 +89,7 @@ class _SyncLineChartWidgetState extends State<SyncLineChartWidget> {
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   BarGraphDetailScreen(
-                                                      type: 'line',
+                                                      type: 'bar',
                                                       showGraph: data
                                                           .teamGraphList[index])));
                                     },
@@ -137,77 +137,59 @@ class _SyncLineChartWidgetState extends State<SyncLineChartWidget> {
                                   ),
                                   SizedBox(
                                     child: SfCartesianChart(
-                                      // isTransposed: true,
-                                      zoomPanBehavior:
-                                          ZoomPanBehavior(enablePanning: false),
+                                      zoomPanBehavior: ZoomPanBehavior(enablePanning: false),
                                       primaryXAxis: CategoryAxis(),
                                       series: <ChartSeries>[
-                                        SplineSeries<ChartData, String>(
-                                            color: kblueColor,
-                                            dataSource: data
-                                                .currentMonthCharList[index].chartList!,
-                                            xValueMapper: (ChartData data, _) =>
-                                                data.month,
-                                            yValueMapper: (ChartData data, _) => data.y,
-                                            emptyPointSettings: EmptyPointSettings(
-                                                // Mode of empty point
-                                                mode: EmptyPointMode.average),
-                                            dataLabelSettings: DataLabelSettings(
-                                                labelAlignment:
-                                                    ChartDataLabelAlignment.outer,
-                                                isVisible: true,
-                                                // Templating the data label
-                                                builder: (dynamic data,
-                                                    dynamic point,
-                                                    dynamic series,
-                                                    int pointIndex,
-                                                    int seriesIndex) {
-                                                  ChartData chartData = data;
-                                                  return SizedBox(
-                                                      height: 30,
-                                                      width: 30,
-                                                      child: customtext(
-                                                          fontWeight: FontWeight.w400,
-                                                          text: "${chartData.amount}",
-                                                          fontsize: 7));
-                                                }),
-                                            markerSettings:
-                                                const MarkerSettings(isVisible: true)),
-                                        SplineSeries<ChartData, String>(
-                                            color: const Color(0xffAFAEFE),
-                                            dataLabelSettings: DataLabelSettings(
-                                                labelAlignment:
-                                                    ChartDataLabelAlignment.auto,
-                                                isVisible: true,
-                                                // Templating the data label
-                                                builder: (dynamic data,
-                                                    dynamic point,
-                                                    dynamic series,
-                                                    int pointIndex,
-                                                    int seriesIndex) {
-                                                  ChartData chartData = data;
-                                                  return SizedBox(
-                                                      height: 30,
-                                                      width: 30,
-                                                      child: customtext(
-                                                          fontWeight: FontWeight.w400,
-                                                          text:
-                                                              "${chartData.readableCompleteAmount}",
-                                                          fontsize: 7));
-                                                }),
-                                            dataSource: data
-                                                .currentMonthCharList[index].chartList!,
-                                            xValueMapper: (ChartData data, _) =>
-                                                data.month,
-                                            yValueMapper: (ChartData data, _) => data.y1,
-                                            emptyPointSettings: EmptyPointSettings(
-                                                // Mode of empty point
-                                                mode: EmptyPointMode.average),
-                                            markerSettings:
-                                                const MarkerSettings(isVisible: true)),
+                                        ColumnSeries<ChartData, String>(
+                                          color: kblueColor,
+                                          dataSource: data.currentMonthCharList[index].chartList!,
+                                          xValueMapper: (ChartData data, _) => data.month,
+                                          yValueMapper: (ChartData data, _) => data.y,
+                                          emptyPointSettings: EmptyPointSettings(mode: EmptyPointMode.average),
+                                          dataLabelSettings: DataLabelSettings(
+                                            labelAlignment: ChartDataLabelAlignment.outer,
+                                            isVisible: true,
+                                            builder: (dynamic data, dynamic point, dynamic series, int pointIndex, int seriesIndex) {
+                                              ChartData chartData = data;
+                                              return SizedBox(
+                                                height: 30,
+                                                width: 30,
+                                                child: customtext(
+                                                  fontWeight: FontWeight.w400,
+                                                  text: "${chartData.amount}",
+                                                  fontsize: 7,
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                        ColumnSeries<ChartData, String>(
+                                          color: const Color(0xffAFAEFE),
+                                          dataSource: data.currentMonthCharList[index].chartList!,
+                                          xValueMapper: (ChartData data, _) => data.month,
+                                          yValueMapper: (ChartData data, _) => data.y1,
+                                          emptyPointSettings: EmptyPointSettings(mode: EmptyPointMode.average),
+                                          dataLabelSettings: DataLabelSettings(
+                                            labelAlignment: ChartDataLabelAlignment.auto,
+                                            isVisible: true,
+                                            builder: (dynamic data, dynamic point, dynamic series, int pointIndex, int seriesIndex) {
+                                              ChartData chartData = data;
+                                              return SizedBox(
+                                                height: 30,
+                                                width: 30,
+                                                child: customtext(
+                                                  fontWeight: FontWeight.w400,
+                                                  text: "${chartData.readableCompleteAmount}",
+                                                  fontsize: 7,
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
                                       ],
                                     ),
-                                  ),
+                                  )
+
                                 ],
                               ),
                             ),

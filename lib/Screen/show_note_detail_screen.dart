@@ -1,9 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
-
-// import 'package:flutter_quill/flutter_quill.dart';
 import 'package:smart_leader/Componants/Custom_text.dart';
 import 'package:smart_leader/Componants/custom_bottun.dart';
 import 'package:smart_leader/Componants/session_manager.dart';
@@ -14,7 +11,6 @@ import 'package:smart_leader/LocalDatabase/modals/add_note.dart';
 import 'package:smart_leader/Modal/show_note_modal.dart';
 
 import '../Helper/helper.dart';
-import '../Widget/add_myNote_widget.dart';
 import '../Widget/edit_note_screen.dart';
 import '../Widget/edit_note_widget.dart';
 
@@ -31,26 +27,13 @@ class ShowNoteDetailScreen extends StatefulWidget {
 }
 
 class _ShowNoteDetailScreenState extends State<ShowNoteDetailScreen> {
-  //todo: uncomment these lines : for quill editor
-  QuillController _controller = QuillController.basic();
-
   bool isSubmit = false;
   bool isNetwork = false;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    var myJSON =
-        jsonDecode(widget.noteModalData.description!.replaceAll('\n', '\\n'));
-
-    //todo: uncomment these lines : for quill editor
-    _controller = QuillController(
-        document: Document.fromJson(myJSON),
-        selection: const TextSelection.collapsed(offset: 0),
-    readOnly: true);
-
-    print('Myjson $myJSON');
+    // Any initialization code can go here
   }
 
   @override
@@ -92,16 +75,13 @@ class _ShowNoteDetailScreenState extends State<ShowNoteDetailScreen> {
                   ),
                   InkWell(
                       onTap: () {
-
                         Navigator.pop(context);
-
                       },
                       child: Image.asset(
                         "assest/png_icon/home_removebg_preview.png",
                         height: 25,
                         width: 25,
                       ))
-
                 ],
               ),
             ),
@@ -109,11 +89,11 @@ class _ShowNoteDetailScreenState extends State<ShowNoteDetailScreen> {
           Expanded(
             child: SingleChildScrollView(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 25.0),
+              const EdgeInsets.symmetric(horizontal: 15.0, vertical: 25.0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  borderRadius: BorderRadius.circular(10)
+                    color: Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(10)
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(10),
@@ -142,29 +122,19 @@ class _ShowNoteDetailScreenState extends State<ShowNoteDetailScreen> {
                       ),
                       const SizedBox(height: 15.0),
 
-
-                      //todo: uncomment these lines : for quill editor
-                      /*QuillProvider(
-                        configurations: QuillConfigurations(
-                          controller: _controller,
-                          sharedConfigurations: const QuillSharedConfigurations(
-                            locale: Locale('en'),
-                          ),
-                        ),
-                        child: QuillEditor.basic(
-                          configurations: const QuillEditorConfigurations(
-                            readOnly: false,
-                          ),
-                        ),
-                      ),*/
+                      // Displaying the note description as simple text
                       Container(
-                        padding: EdgeInsets.all(8),
-                        child: QuillEditor.basic(
-                          controller: _controller,
-                          // true for view-only mode
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                      )
-
+                        child: Text(
+                          widget.noteModalData.description ?? 'No description available.',
+                          style: const TextStyle(fontSize: 16, color: Colors.black87),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -174,86 +144,49 @@ class _ShowNoteDetailScreenState extends State<ShowNoteDetailScreen> {
         ],
       ),
       bottomNavigationBar: Container(
-          margin: const EdgeInsets.only(bottom: 15.0, left: 15.0, right: 15.0),
-          height: 50,
-          child: isSubmit
-              ? Center(child: CircularProgressIndicator())
-              : Row(
-                  children: [
-                    Expanded(
-                      child: custom_Button(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => EditNoteWidget(
-                                          showNoteModalData:
-                                              widget.noteModalData,
-                                          folderName: widget.folderName,
-                                        ))).then((value) => {
-                                  setState(() {
-                                    // showNaote(folderid);
-                                    //checkInternet(widget.folderName);
-                                  })
-                                });
-                          },
-                          title: "Edit Note",
-                          hight: 45,
-                          width: 140,
-                          fontSize: 20),
-                    ),
-                    Expanded(
-                      child: custom_Button(
-                          onTap: () {
-                            showDeleteDialog(widget.noteModalData.id!);
-                          },
-                          title: "Delete Note",
-                          hight: 45,
-                          width: 140,
-                          fontSize: 20),
-                    ),
-                  ],
-                )),
+        margin: const EdgeInsets.only(bottom: 15.0, left: 15.0, right: 15.0),
+        height: 50,
+        child: isSubmit
+            ? Center(child: CircularProgressIndicator())
+            : Row(
+          children: [
+            Expanded(
+              child: custom_Button(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EditNoteWidget(
+                              showNoteModalData:
+                              widget.noteModalData,
+                              folderName: widget.folderName,
+                            ))).then((value) => {
+                      setState(() {
+                        // Refresh if needed
+                      })
+                    });
+                  },
+                  title: "Edit Note",
+                  hight: 45,
+                  width: 140,
+                  fontSize: 20),
+            ),
+            Expanded(
+              child: custom_Button(
+                  onTap: () {
+                    showDeleteDialog(widget.noteModalData.id!);
+                  },
+                  title: "Delete Note",
+                  hight: 45,
+                  width: 140,
+                  fontSize: 20),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  void editNote() async {
-    //todo: uncomment these lines : for quill editor
-    if (_controller.document.toPlainText().isEmpty) {
-      Helper.toastMassage('Please Enter Description', Colors.red);
-      return;
-    }
-    setState(() {
-      isSubmit = true;
-    });
-
-    bool isNetwork = await Helper.isNetworkAvailable();
-//todo: uncomment these lines : for quill editor
-    var description = jsonEncode(_controller.document.toDelta().toJson());
-
-    if (!isNetwork) {
-      updateNoteOffline();
-    } else {
-      Map<String, String> body = {
-        "id": widget.noteModalData.id!,
-        'title': widget.noteModalData.title!,
-        "description": description,
-        ////todo: uncomment these lines : for quill editor
-        "user_id": SessionManager.getUserID(),
-      };
-      ApiHelper.editNote(body).then((login) {
-        setState(() {
-          isSubmit = false;
-        });
-
-        if (login.message == 'Update Note Successfully') {
-          updateNoteOffline();
-        } else {
-          Helper.showSnackVar('Error', Colors.red, context);
-        }
-      });
-    }
-  }
   void showDeleteDialog(String deleteId) {
     showDialog(
       context: context,
@@ -265,7 +198,6 @@ class _ShowNoteDetailScreenState extends State<ShowNoteDetailScreen> {
           fontsize: 22,
           color: Theme.of(context).primaryColor,
         ),
-
         actions: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -298,7 +230,6 @@ class _ShowNoteDetailScreenState extends State<ShowNoteDetailScreen> {
   }
 
   void delete(String id) async {
-
     Map<String, String> body = {"id": id};
     print("Deleting Note ID: $id");
 
@@ -314,9 +245,6 @@ class _ShowNoteDetailScreenState extends State<ShowNoteDetailScreen> {
       if (response.message?.trim() == "Successfully Deleted") {
         Navigator.pop(context);
         Helper.showSnackVar("Deleted Successfully", Colors.green, context);
-
-        // Optionally refresh the list
-        // showNote(folderid);
       } else {
         Helper.showSnackVar(response.message ?? "Deletion failed", Colors.red, context);
       }
@@ -324,13 +252,9 @@ class _ShowNoteDetailScreenState extends State<ShowNoteDetailScreen> {
   }
 
   void updateNoteOffline() {
-    //todo: uncomment these lines : for quill editor
-    var description = jsonEncode(_controller.document.toDelta().toJson());
-
     AddNote addNote = AddNote(
         id: int.parse(widget.noteModalData.id!),
-        description: description,
-        ////todo: uncomment these lines : for quill editor
+        description: widget.noteModalData.description ?? '',
         title: widget.noteModalData.title,
         folderName: widget.folderName,
         createdDate: Helper.formattedDate());

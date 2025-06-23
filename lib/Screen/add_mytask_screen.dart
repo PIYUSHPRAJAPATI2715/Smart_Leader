@@ -409,7 +409,7 @@ class _AddMyTaskScreenState extends State<AddMyTaskScreen> {
 
                     // A to Z
                     alphaOntap: () {
-                      Navigator.pop(context);
+                      // Navigator.pop(context);
                       setState(() {
                         showTaskList.sort((a, b) => a.summary!.compareTo(b.summary!));
                       });
