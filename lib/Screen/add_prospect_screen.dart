@@ -285,13 +285,13 @@ class _AddProspectScreenState extends State<AddProspectScreen> {
       String dateTime =
           '$selecteddate ${notificationTime.replaceAll('AM', '').replaceAll('PM', '').trim()}';
 
-      NotificationService().showNotification(
-          value,
-          'SmartLeader - Connection',
-          nameController.text,
-          dropdownValue4,
-          dateTime,
-          Helper.kConnectionScreen);
+      // NotificationService().showNotification(
+      //     value,
+      //     'SmartLeader - Connection',
+      //     nameController.text,
+      //     dropdownValue4,
+      //     dateTime,
+      //     Helper.kConnectionScreen);
 
       addEvent();
     } else {

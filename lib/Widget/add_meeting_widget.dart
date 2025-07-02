@@ -13,6 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:smart_leader/Widget/addEvent.dart';
 import 'package:smart_leader/services/notification_service.dart';
 
+import '../Modal/new_event.dart';
 import 'custom_top_container.dart';
 
 class AddMeetingWidget extends StatefulWidget {
@@ -530,6 +531,35 @@ class _AddMeetingWidgetState extends State<AddMeetingWidget> {
     // //birthday_parson:gffgfg
     // place:fgbff
     // remind_me:12 min
+  }
+  Map<String, List> mySelectedEvents = {};
+  bool isLoading = false;  Map<K, List<V>> groupBy<K, V>(List<V> list, K Function(V) getKey) {
+    Map<K, List<V>> result = {};
+
+    for (var item in list) {
+      var key = getKey(item);
+      result.putIfAbsent(key, () => []).add(item);
+    }
+
+    return result;
+  }
+
+  void getNewEvent() async {
+    setState(() {
+      isLoading = true;
+    });
+    Map<String, String> body = {'user_id': SessionManager.getUserID()};
+    NewEvent events = await ApiHelper.getNewEvent(body);
+
+    setState(() {
+      isLoading = false;
+    });
+    Map<String, List<Map<String, dynamic>>> groupedEvents =
+    groupBy(events.toJson()['result'], (event) => event["date"]);
+
+    mySelectedEvents = groupedEvents;
+
+    // Print the result
   }
 
   void addNewEvent() {

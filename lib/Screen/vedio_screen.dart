@@ -74,36 +74,36 @@ class _VedioScreenState extends State<VedioScreen> {
   void showVideos() {
     setState(() {
       isSubmit = true;
-      showVideoList.clear();      // 🧼 Clear old list
-      allVideosList.clear();      // 🧼 Clear old data
-      categoriesList.clear();     // 🧼 Clear old tags
+      showVideoList.clear();
+      allVideosList.clear();
+      // categoriesList.clear();
     });
 
     final body = {
       'language_id': selectedLanguageId,
     };
 
-    print("Fetching videos with body: $body");
+    print("🌐 Fetching videos with body: $body");
 
     ApiHelper.showeVideoList(body).then((value) {
-      print("API Response: ${value.message}");
+      print("🛬 API Response: ${value.message}");
 
       if (value.showVideosModalData != null) {
         final filteredList = value.showVideosModalData!
             .where((video) => video.languageKey?.toString() == selectedLanguageId.toString())
             .toList();
 
+
         setState(() {
           allVideosList = filteredList;
           showVideoList = List.from(filteredList);
 
-          // 🖼 Print all video data
-          print("🧮 Filtered Videos Count: ${filteredList.length}");
+          print("✅ Filtered Videos Count: ${filteredList.length}");
           for (var v in filteredList) {
-            print("📽️ ID: ${v.id} | Name: ${v.videoName} | Lang: ${v.languageName} (${v.languageKey})");
+            print("🎯 Video: ID=${v.id}, Name=${v.videoName}, Lang=${v.languageKey}");
           }
 
-          // 🎯 Build category list (tags)
+          // ✅ Extract tags only from filtered list
           final tagNames = filteredList
               .map((video) => video.tagName?.trim())
               .where((tag) => tag != null && tag!.isNotEmpty && tag!.toLowerCase() != 'no tag')
@@ -118,31 +118,27 @@ class _VedioScreenState extends State<VedioScreen> {
 
           initialValue = categoriesList.first;
 
-          print("📌 Unique Tag Names from API:");
+          print("📌 Tags from Filtered List:");
           for (var tag in tagNames) {
             print("➡️ $tag");
           }
         });
       } else {
-        // No data case
         setState(() {
           allVideosList.clear();
           showVideoList.clear();
-          categoriesList = [ShowVideosModalData(tagName: 'select playlist')];
-          initialValue = categoriesList.first;
+          // categoriesList = [ShowVideosModalData(tagName: 'select playlist')];
+          // initialValue = categoriesList.first;
         });
       }
     }).catchError((error) {
       print("❌ API error: $error");
-      setState(() {
-        isSubmit = false;
-      });
+      setState(() => isSubmit = false);
     }).whenComplete(() {
-      setState(() {
-        isSubmit = false;
-      });
+      setState(() => isSubmit = false);
     });
   }
+
 
 
 
@@ -192,22 +188,34 @@ class _VedioScreenState extends State<VedioScreen> {
 
     categoriesList.clear();
 
-    // Ensure the default value is set
     ShowVideosModalData categoriesData = ShowVideosModalData(videoName: 'select playlist');
     categoriesList.add(categoriesData);
-    initialValue = categoriesData; // Set initial value safely
+    initialValue = categoriesData;
 
-    ApiHelper.getvideosName().then(
-          (value) {
-            if (value.showVideosModalData != null) {
-              allVideosList = value.showVideosModalData!;
-              showVideoList = List.from(allVideosList);
-              getTagDropdownList(); // <== Populate tag dropdown here
-            } else {
-          print("Error: ${value.message}");
-        }
-      },
-    ).catchError((error) {
+    ApiHelper.getvideosName().then((value) {
+      if (value.showVideosModalData != null) {
+        // ✅ Only use this to extract tag names — NOT override lists
+        final filteredList = value.showVideosModalData!
+            .where((video) => video.languageKey?.toString() == selectedLanguageId.toString())
+            .toList();
+
+        final tagNames = filteredList
+            .map((video) => video.tagName?.trim())
+            .where((tag) => tag != null && tag!.isNotEmpty && tag!.toLowerCase() != 'no tag')
+            .toSet()
+            .toList()
+          ..sort();
+
+        categoriesList = [
+          ShowVideosModalData(tagName: 'select playlist'),
+          ...tagNames.map((tag) => ShowVideosModalData(tagName: tag))
+        ];
+
+        initialValue = categoriesList.first;
+      } else {
+        print("Error: ${value.message}");
+      }
+    }).catchError((error) {
       print("Exception: $error");
     }).whenComplete(() {
       setState(() {
@@ -215,6 +223,7 @@ class _VedioScreenState extends State<VedioScreen> {
       });
     });
   }
+
   void getTagDropdownList() {
     final uniqueTags = <String>{};
     categoriesList.clear();
@@ -322,7 +331,7 @@ class _VedioScreenState extends State<VedioScreen> {
                       Expanded(
                         child: InkWell(
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const SearchVideoScreen()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) =>  SearchVideoScreen(selectedLanguageId.toString())));
                           },
                           child: Container(
                             margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),

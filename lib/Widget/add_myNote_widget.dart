@@ -29,7 +29,7 @@ class AddMyNoteWidget extends StatefulWidget {
 class _AddMyNoteWidgetState extends State<AddMyNoteWidget> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
-  // final HtmlEditorController htmlController = HtmlEditorController();
+ final HtmlEditorController htmlController = HtmlEditorController();
 
   String hintTitle = 'Title';
   String hintDesc = 'Description';
@@ -57,11 +57,11 @@ class _AddMyNoteWidgetState extends State<AddMyNoteWidget> {
       return;
     }
 
-    // String htmlDesc = await htmlController.getText();
-    // if (htmlDesc.trim().isEmpty || htmlDesc == "<p><br></p>") {
-    //   Helper.toastMassage('Please Enter Description', Colors.red);
-    //   return;
-    // }
+    String htmlDesc = await htmlController.getText();
+    if (htmlDesc.trim().isEmpty || htmlDesc == "<p><br></p>") {
+      Helper.toastMassage('Please Enter Description', Colors.red);
+      return;
+    }
 
     bool isNetwork = await Helper.isNetworkAvailable();
 
@@ -69,7 +69,7 @@ class _AddMyNoteWidgetState extends State<AddMyNoteWidget> {
       Map<String, String> body = {
         "folder_id": widget.id,
         'title': titleController.text,
-        "description": noteController.text, // Send raw HTML string directly
+        "description": htmlDesc, // Send raw HTML string directly
         "user_id": SessionManager.getUserID(),
       };
 
@@ -147,19 +147,37 @@ class _AddMyNoteWidgetState extends State<AddMyNoteWidget> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    CustomTextField(
-                      hight: 100,
-                      title: "Your note here",
-                      controller: noteController,
-                      hint: hintTitle,
-                      inputAction: TextInputAction.none,
-                      inputType: TextInputType.text,
-                      lableName: hintTitle,
-maxLines: 8,
-                      minLines: 1,
-                      hintfont: 15,
-                      lablefont: 14,
+                    HtmlEditor(
+                      controller: htmlController,
+                      htmlEditorOptions: HtmlEditorOptions(
+                        hint: 'Start typing...',
+                        shouldEnsureVisible: true,
+                        initialText:  '',
+                      ),
+                      htmlToolbarOptions: HtmlToolbarOptions(
+                        defaultToolbarButtons: [
+                          FontButtons(),
+                          ParagraphButtons(),
+                          InsertButtons(),
+                          OtherButtons(),
+
+                        ],
+                      ),
+                      otherOptions: OtherOptions(height: 300),
                     ),
+//                     CustomTextField(
+//                       hight: 100,
+//                       title: "Your note here",
+//                       controller: noteController,
+//                       hint: hintTitle,
+//                       inputAction: TextInputAction.none,
+//                       inputType: TextInputType.text,
+//                       lableName: hintTitle,
+// maxLines: 8,
+//                       minLines: 1,
+//                       hintfont: 15,
+//                       lablefont: 14,
+//                     ),
                     const SizedBox(height: 10.0),
                   ],
                 ),

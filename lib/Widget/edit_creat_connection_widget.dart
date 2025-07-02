@@ -191,14 +191,14 @@ class _EditCreatConnectionWidgetState extends State<EditCreatConnectionWidget> {
 
       String dateTime =
           '$selecteddate ${notificationTime.replaceAll('AM', '').replaceAll('PM', '').trim()}';
-
-      NotificationService().showNotification(
-          1,
-          'SmartLeader - Connection',
-          nameController.text,
-          dropdownValue4,
-          dateTime,
-          Helper.kConnectionScreen);
+      //
+      // NotificationService().showNotification(
+      //     1,
+      //     'SmartLeader - Connection',
+      //     nameController.text,
+      //     dropdownValue4,
+      //     dateTime,
+      //     Helper.kConnectionScreen);
 
       Navigator.pop(context, true);
       Helper.showSnackVar('Connection Updated', kblueColor, context);
@@ -318,14 +318,14 @@ class _EditCreatConnectionWidgetState extends State<EditCreatConnectionWidget> {
       if (meetingRequired == 'Yes') {
         String dateTime =
             '$selecteddate ${notificationTime.replaceAll('AM', '').replaceAll('PM', '').trim()}';
-
-        NotificationService().showNotification(
-            value,
-            'SmartLeader - Connection',
-            nameController.text,
-            dropdownValue4,
-            dateTime,
-            Helper.kConnectionScreen);
+        //
+        // NotificationService().showNotification(
+        //     value,
+        //     'SmartLeader - Connection',
+        //     nameController.text,
+        //     dropdownValue4,
+        //     dateTime,
+        //     Helper.kConnectionScreen);
 
         //addEvent();
         setState(() {
@@ -1196,13 +1196,13 @@ class _EditCreateConnectionNoWidgetState
       String dateTime =
           '$selecteddate ${notificationTime.replaceAll('AM', '').replaceAll('PM', '').trim()}';
 
-      NotificationService().showNotification(
-          1,
-          'SmartLeader - Connection',
-          nameController.text,
-          dropdownValue4,
-          dateTime,
-          Helper.kConnectionScreen);
+      // NotificationService().showNotification(
+      //     1,
+      //     'SmartLeader - Connection',
+      //     nameController.text,
+      //     dropdownValue4,
+      //     dateTime,
+      //     Helper.kConnectionScreen);
 
       Navigator.pop(context, true);
       Helper.showSnackVar('Connection Updated', kblueColor, context);
@@ -1234,13 +1234,13 @@ class _EditCreateConnectionNoWidgetState
         String dateTime =
             '$selecteddate ${notificationTime.replaceAll('AM', '').replaceAll('PM', '').trim()}';
 
-        NotificationService().showNotification(
-            value,
-            'SmartLeader - Connection',
-            nameController.text,
-            dropdownValue4,
-            dateTime,
-            Helper.kConnectionScreen);
+        // NotificationService().showNotification(
+        //     value,
+        //     'SmartLeader - Connection',
+        //     nameController.text,
+        //     dropdownValue4,
+        //     dateTime,
+        //     Helper.kConnectionScreen);
 
         //   addEvent();
         Helper.showSnackVar('Connection updated', kblueColor, context);

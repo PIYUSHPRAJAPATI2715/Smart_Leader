@@ -142,8 +142,8 @@ class _EditEventWidgetState extends State<EditEventWidget> {
       String dateTime =
           '$selecteddate ${notificationTime.replaceAll('AM', '').replaceAll('PM', '').trim()}';
 
-      NotificationService().showNotification(1, 'SmartLeader - Event',
-          titleController.text, remindMe, dateTime, Helper.kEventScreen);
+      // NotificationService().showNotification(1, 'SmartLeader - Event',
+      //     titleController.text, remindMe, dateTime, Helper.kEventScreen);
 
       Navigator.pop(context, true);
       Helper.showSnackVar('Event Updated', kblueColor, context);
@@ -228,8 +228,8 @@ class _EditEventWidgetState extends State<EditEventWidget> {
       String dateTime =
           '$selecteddate ${notificationTime.replaceAll('AM', '').replaceAll('PM', '').trim()}';
 
-      NotificationService().showNotification(1, 'SmartLeader - Event',
-          titleController.text, remindMe, dateTime, Helper.kEventScreen);
+      // NotificationService().showNotification(1, 'SmartLeader - Event',
+      //     titleController.text, remindMe, dateTime, Helper.kEventScreen);
 
       Navigator.pop(context, true);
       Helper.showSnackVar('Event Updated', kblueColor, context);

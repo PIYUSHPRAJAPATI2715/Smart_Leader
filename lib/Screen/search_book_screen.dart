@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:smart_leader/Componants/Custom_text.dart';
@@ -7,11 +9,13 @@ import 'package:smart_leader/Helper/Api.helper.dart';
 import 'package:smart_leader/Helper/theme_colors.dart';
 import 'package:smart_leader/Modal/show_book_list_modal.dart';
 import 'package:smart_leader/Screen/book_description_screen.dart';
-
+import 'package:http/http.dart'as http;
 import '../Componants/dialog_audio_player_widget.dart';
 
 class SearchBookScreen extends StatefulWidget {
-  const SearchBookScreen({Key? key}) : super(key: key);
+  String? selectedLanguageId;
+  SearchBookScreen(this.selectedLanguageId, {Key? key}) : super(key: key);
+   // SearchBookScreen(String string, {this.selectedLanguageId,Key? key}) : super(key: key);
 
   @override
   State<SearchBookScreen> createState() => _SearchBookScreenState();
@@ -23,22 +27,72 @@ class _SearchBookScreenState extends State<SearchBookScreen> {
 
   bool isSearch = false;
   final FocusNode _searchFocusNode = FocusNode();
-  void searchBook(String word) {
-    bookList.clear();
+
+  String? noDataMessage;
+  bool isSearching = false;
+  Map<String, String> languageMap = {
+    "1": "hindi",
+    "2": "english",
+    "3": "bengali",
+    "4": "malayalam",
+    "5": "telugu",
+  };
+  void searchBook(String query, String languageId) {
+
     setState(() {
-      isSearch = true;
+      isSearching = true;
+      noDataMessage = null;
     });
-    ApiHelper.searchBook(word).then((value) {
+    String languageKey = languageMap[languageId] ?? "hindi";
+    final String url =
+        'https://ruparnatechnology.com/Smartleader/Api/process.php?action=video_search&keyword=$query&language_key=$languageKey';
+
+    print("📡 API URL: $url");
+
+    http.get(Uri.parse(url)).then((response) {
+      print("📥 API Response: ${response.body}");
+
       setState(() {
-        isSearch = false;
+        isSearching = false;
+
+        final json = jsonDecode(response.body);
+        if (json["status"] == true && json["data"] != null && json["data"].isNotEmpty) {
+          bookList = List<Data>.from(
+            json["data"].map((item) => Data.fromJson(item)),
+          );
+        } else {
+          bookList.clear();
+          noDataMessage = "No books found for \"$query\"";
+        }
       });
-      if (value.data!.isNotEmpty) {
-        setState(() {
-          bookList = value.data!;
-        });
-      }
+    }).catchError((e) {
+      setState(() {
+        isSearching = false;
+        bookList.clear();
+        noDataMessage = "Something went wrong. Please try again.";
+      });
+      print("❌ Error fetching data: $e");
     });
   }
+
+
+
+  // void searchBook(String word) {
+  //   bookList.clear();
+  //   setState(() {
+  //     isSearch = true;
+  //   });
+  //   ApiHelper.searchBook(word).then((value) {
+  //     setState(() {
+  //       isSearch = false;
+  //     });
+  //     if (value.data!.isNotEmpty) {
+  //       setState(() {
+  //         bookList = value.data!;
+  //       });
+  //     }
+  //   });
+  // }
 
   @override
   void initState() {
@@ -76,7 +130,7 @@ class _SearchBookScreenState extends State<SearchBookScreen> {
                 controller: _searchController,
                 focusNode: _searchFocusNode,
                 onChanged: (search) {
-                  searchBook(search);
+                  searchBook(search,widget.selectedLanguageId.toString());
                 },
                 style: TextStyle(
                     color: Theme.of(context).primaryColor,
@@ -118,6 +172,23 @@ class _SearchBookScreenState extends State<SearchBookScreen> {
                           color: SessionManager.getTheme() == true
                               ? kscafolledColor
                               : Colors.white)),
+                ),
+              ),
+            ),
+            Expanded(
+              child: isSearching
+                  ? const Center(child: CircularProgressIndicator())
+                  : bookList.isNotEmpty
+                  ? ListView.builder(
+                itemCount: bookList.length,
+                itemBuilder: (context, index) {
+                  return SearchBookWidget(data: bookList[index]);
+                },
+              )
+                  : Center(
+                child: Text(
+                  noDataMessage ?? "Start typing to search books",
+                  style: const TextStyle(fontSize: 16),
                 ),
               ),
             ),

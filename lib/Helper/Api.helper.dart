@@ -564,9 +564,9 @@ class ApiHelper {
   }
 
 
-  static Future<ShowVideosModal> searchVideo(String keyword) async {
+  static Future<ShowVideosModal> searchVideo(String keyword,String language) async {
     final Uri uri = Uri.parse(
-      'https://ruparnatechnology.com/Smartleader/Api/process.php?action=video_search&keyword=$keyword',
+      'https://ruparnatechnology.com/Smartleader/Api/process.php?action=video_search&keyword=$keyword&language_key=$language',
     );
 
     try {

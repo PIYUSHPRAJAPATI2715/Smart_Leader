@@ -4,6 +4,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:get/get.dart';
+import 'package:html/parser.dart' as html_parser;
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:smart_leader/Componants/Custom_text.dart';
@@ -410,6 +411,10 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                           shrinkWrap: true,
                           itemCount: widget.showfolderData.length,
                           itemBuilder: (context, index) {
+                            String stripHtml(String rawHtml) {
+                              final document = html_parser.parse(rawHtml);
+                              return document.body?.text ?? '';      // plain‑text, entities decoded
+                            }
                             return InkWell(
                               onTap: () {
                                 data.selectedOneContainer(index);
@@ -553,7 +558,10 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                             itemCount: showNoteList.length,
                         itemBuilder: (context, index) {
                           final description = showNoteList[index].description ?? "";
-
+                          String stripHtml(String rawHtml) {
+                            final document = html_parser.parse(rawHtml);
+                            return document.body?.text ?? '';      // plain‑text, entities decoded
+                          }
                           return InkWell(
                             onTap: () {
                               Navigator.push(
@@ -632,16 +640,15 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                                   // Render HTML description here
                                   Expanded(
                                     child: SingleChildScrollView(
-                                      child:customtext(
+                                      child: customtext(
                                         fontWeight: FontWeight.w500,
-                                        text: showNoteList[index].description ?? "",
-                                        // maxLine: 2,
+                                        text: stripHtml(showNoteList[index].description ?? ''),
                                         fontsize: 16,
-
                                         color: Theme.of(context).primaryColor,
                                       ),
                                     ),
                                   ),
+
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [

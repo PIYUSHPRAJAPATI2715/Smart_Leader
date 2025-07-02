@@ -503,8 +503,8 @@ class _EditTaskWidgetState extends State<EditTaskWidget> {
       String dateTime =
           '$selecteddate ${notificationTime.replaceAll('AM', '').replaceAll('PM', '').trim()}';
 
-      NotificationService().showNotification(value, 'SmartLeader - Task',
-          titleController.text, dropdownValue4, dateTime, Helper.kTaskScreen);
+      // NotificationService().showNotification(value, 'SmartLeader - Task',
+      //     titleController.text, dropdownValue4, dateTime, Helper.kTaskScreen);
       Navigator.pop(context, true);
       Helper.showSnackVar('Successfully Updated', Colors.green, context);
     });

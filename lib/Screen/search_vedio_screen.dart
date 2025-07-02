@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart'as http;
 import 'package:flutter/material.dart';
 import 'package:smart_leader/Componants/Custom_text.dart';
 import 'package:smart_leader/Componants/session_manager.dart';
@@ -8,7 +10,8 @@ import 'package:smart_leader/Screen/vedio_screen.dart';
 import 'package:smart_leader/Screen/video_player_screen.dart';
 
 class SearchVideoScreen extends StatefulWidget {
-  const SearchVideoScreen({Key? key}) : super(key: key);
+  String? selectedLanguageId;
+   SearchVideoScreen(this.selectedLanguageId, {Key? key}) : super(key: key);
 
   @override
   State<SearchVideoScreen> createState() => _SearchVideoScreenState();
@@ -18,22 +21,58 @@ class _SearchVideoScreenState extends State<SearchVideoScreen> {
   List<ShowVideosModalData> videoList = [];
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
+  String? noDataMessage;
   bool isSearching = false;
+  Map<String, String> languageMap = {
+    "1": "hindi",
+    "2": "english",
+    "3": "bengali",
+    "4": "malayalam",
+    "5": "telugu",
+  };
+  void searchVideo(String query, String languageId) {
 
-  void searchVideo(String query) {
-    videoList.clear();
     setState(() {
       isSearching = true;
+      noDataMessage = null;
     });
-    ApiHelper.searchVideo(query).then((value) {
+    String languageKey = languageMap[languageId] ?? "hindi";
+    final String url =
+        'https://ruparnatechnology.com/Smartleader/Api/process.php?action=video_search&keyword=$query&language_key=$languageKey';
+
+    print("📡 API URL: $url");
+
+    http.get(Uri.parse(url)).then((response) {
+      print("📥 API Response: ${response.body}");
+
       setState(() {
         isSearching = false;
-        if (value.showVideosModalData != null && value.showVideosModalData!.isNotEmpty) {
-          videoList = value.showVideosModalData!;
+
+        final json = jsonDecode(response.body);
+        if (json["status"] == true && json["data"] != null && json["data"].isNotEmpty) {
+          videoList = List<ShowVideosModalData>.from(
+            json["data"].map((item) => ShowVideosModalData.fromJson(item)),
+          );
+        } else {
+          videoList.clear();
+          noDataMessage = "No videos found for \"$query\"";
         }
       });
+    }).catchError((e) {
+      setState(() {
+        isSearching = false;
+        videoList.clear();
+        noDataMessage = "Something went wrong. Please try again.";
+      });
+      print("❌ Error fetching data: $e");
     });
   }
+
+
+
+
+
+
 
   @override
   void initState() {
@@ -68,7 +107,7 @@ class _SearchVideoScreenState extends State<SearchVideoScreen> {
               child: TextFormField(
                 controller: _searchController,
                 focusNode: _searchFocusNode,
-                onChanged: (text) => searchVideo(text),
+                onChanged: (text) => searchVideo(text,widget.selectedLanguageId.toString()),
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
                   fontSize: 18,
@@ -85,13 +124,21 @@ class _SearchVideoScreenState extends State<SearchVideoScreen> {
             Expanded(
               child: isSearching
                   ? const Center(child: CircularProgressIndicator())
-                  : ListView.builder(
+                  : videoList.isNotEmpty
+                  ? ListView.builder(
                 itemCount: videoList.length,
                 itemBuilder: (context, index) {
                   return SearchVideoItem(video: videoList[index]);
                 },
+              )
+                  : Center(
+                child: Text(
+                  noDataMessage ?? "Start typing to search videos",
+                  style: const TextStyle(fontSize: 16),
+                ),
               ),
-            )
+            ),
+
           ],
         ),
       ),
